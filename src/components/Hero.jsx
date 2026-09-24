@@ -1,6 +1,13 @@
 
 export default function Hero(){
 
+    function scrollA (id){
+        const sec = document.getElementById(id)
+        if (sec) sec.scrollIntoView({behavior: "smooth"})
+    }
+
+   
+
     return (
     <>
     <section className="hero py-4">
@@ -25,10 +32,10 @@ export default function Hero(){
               moderna y accesible para sus clientes.
             </p>
 
-            <button onClick={() => scrollTo("catalogo")} className="btn btn-custom btn-hero">
+            <button onClick={() => scrollA("catalogo")} className="btn btn-custom btn-hero">
               Ver catálogo
             </button>
-            <button onClick={() => scrollTo("nosotros")} className="btn btn-custom btn-hero">
+            <button onClick={() => scrollA("nosotros")} className="btn btn-custom btn-hero">
               Sobre nosotros
             </button>
           </div>
