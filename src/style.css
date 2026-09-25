@@ -29,7 +29,6 @@ body {
 .hero {
   background-color: #f4e2de !important;
 }
-
 h1,
 h3 {
   font-family: "Pacifico", cursive;
@@ -66,15 +65,25 @@ p {
   border: #8b4513 solid 3px;
 }
 
-.btn-hero {
-  padding: 15px;
-  margin: 10px;
-  font-size: 20px;
-  box-shadow: 5px 5px 10px rgba(0,0,0,0.15);
-  display: inline-block;
-  text-decoration: none;
+.btn-custom.btn-hero {
+  background-color: #5d4037;
+  color: #f4e2de;          /* Texto blanco */
+  border: none;
+  padding: 12px 26px;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Lato", sans-serif;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 5px 8px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
+.btn-custom.btn-hero:hover {
+   transform: scale(1.05);
+  background-color: #4a332c;
+  color: #ffffff;
+}
 .card {
   height: auto;
   max-width: 350px;
