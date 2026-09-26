@@ -4,7 +4,7 @@ export const CATEGORIAS = [
     "Tortas Cuadradas",
     "Tortas Circulares",
     "Postres Individuales",
-    "Pasteleria Tradicional",
+    "Pastelería Tradicional",
     "Productos Sin Gluten",
     "Productos Veganos",
     "Tortas Especiales",
