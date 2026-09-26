@@ -3,7 +3,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Pacifico&display=swap");
 
 body {
-  background-color: #f4e2de;
+  background-color: #f4e2de !important;
   font-family: "Lato", sans-serif;
   margin: 0;
   padding: 0;
@@ -66,9 +66,9 @@ p {
 }
 
 .btn-custom.btn-hero {
-  background-color: #5d4037;
-  color: #f4e2de;          /* Texto blanco */
-  border: none;
+  background-color: #f4e2de;
+  color: #8b4513;         
+  border:#8b4513 solid 2px;
   padding: 12px 26px;
   font-size: 18px;
   font-weight: 600;
@@ -84,7 +84,29 @@ p {
   background-color: #4a332c;
   color: #ffffff;
 }
-.card {
+
+.btn-custom.btn-agregar{
+  background-color: #5d4037;
+  color: #f4e2de;          
+  border: none;
+  padding: 12px 26px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: "Lato", sans-serif;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px auto ;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  width: 100%;
+
+}
+
+.btn-custom.btn-agregar:hover{
+  transform: scale(1.05);
+  background-color: #4a332c;
+  color: #ffffff;
+}
+.cardPasteleria {
   height: auto;
   max-width: 350px;
   margin: 20px;
@@ -95,7 +117,7 @@ p {
   border-radius: 12px;
 }
 
-.card img {
+.cardPasteleria img {
   border-radius: 8px;
   object-fit: cover;
 }
@@ -216,3 +238,4 @@ p {
 #catalogo, #nosotros {
   scroll-margin-top: 90px;
 }
+

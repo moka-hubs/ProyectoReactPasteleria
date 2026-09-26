@@ -10,8 +10,8 @@ export default function Productos({ producto, onAgregarAlCarrito }) {
 
     return (
         
-     <div className="card col-4 d-flex">
-        <div className="d-flex flex-column h-100 p-3">
+     <div className="col-12 col-sm-6 col-md-3 mb-4 d-flex">
+        <div className="cardPasteleria d-flex flex-column h-100">
           <img
           src={`/img/${producto.imagen}`}
           alt={producto.nombre}
@@ -21,7 +21,9 @@ export default function Productos({ producto, onAgregarAlCarrito }) {
         <h3>{producto.nombre}</h3>
         <p>${producto.precio} CLP</p>
         <p> {producto.descripcion} </p>
-        <button onClick={() => onAgregarAlCarrito(producto.codigo)}>
+        <button
+        className="btn btn-custom btn-agregar mt-auto w-100"
+         onClick={() => onAgregarAlCarrito(producto.codigo)}>
         Agregar al carro
         </button>
 
