@@ -1,27 +1,29 @@
 import { useState } from 'react'
 import Productos from './CardProducto';
 import {productosIniciales,CATEGORIAS} from '../data/productos';
+import { useApp } from '../context/Contexto';
 
 
 export default function Catalogo() {
+    const { agregarAlCarrito, categoriaSeleccionada } = useApp();
 
+    const categoriaActual = categoriaSeleccionada || 'Todos Los Productos';
 
-    const [categoriaSeleccionada,setCategoriaSeleccionada] = useState ("Nuestros Productos Destacados")
+    const productosFiltrados = (
+      categoriaActual === 'Todos Los Productos' ||
+      categoriaActual === 'Todos los productos' ||
+      categoriaActual === 'Nuestros Productos Destacados'
+    )
+      ? productosIniciales
+      : productosIniciales.filter(p => p.categoria.toLowerCase() === categoriaActual.toLowerCase());
 
-    const productosFiltrados = categoriaSeleccionada === 'Nuestros Productos Destacados'
-
-    ?productosIniciales
-    :productosIniciales.filter(p => p.categoria === categoriaSeleccionada);
-
-    const tituloCatalogo = categoriaSeleccionada === 'Todos Los Productos'
-    ? "Todos Nuestros Productos"
-    : categoriaSeleccionada;
-
-
-     const agregarAlCarrito = (codigo) => {
-    
-    
-  };
+    const tituloCatalogo = (
+      categoriaActual === 'Todos Los Productos' ||
+      categoriaActual === 'Todos los productos' ||
+      categoriaActual === 'Nuestros Productos Destacados'
+    )
+      ? "Todos Nuestros Productos"
+      : categoriaActual;
 
 
 
@@ -33,7 +35,7 @@ export default function Catalogo() {
           <Productos
             key={producto.codigo} 
             producto={producto} 
-            onAgregarAlCarrito={agregarAlCarrito} 
+             onClick={() => agregarAlCarrito(producto.codigo)}
           />
         ))}
       </div>

@@ -1,6 +1,11 @@
 
 import React from 'react';
-export default function Productos({ producto, onAgregarAlCarrito }) {
+import { useApp } from "../context/Contexto";
+
+
+export default function Productos({ producto }) {
+
+    const { agregarAlCarrito } = useApp();
 
 
   if (!producto){
@@ -28,7 +33,7 @@ export default function Productos({ producto, onAgregarAlCarrito }) {
 
         <button
         className="btn btn-custom btn-agregar mt-auto w-100"
-         onClick={() => onAgregarAlCarrito(producto.codigo)}>
+         onClick={() => agregarAlCarrito(producto.codigo)}>
         Agregar al carro
         
         </button>

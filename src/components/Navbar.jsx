@@ -1,6 +1,13 @@
-
+import { useApp } from "../context/Contexto";
 
 export default function NavBar(){
+    const { setCategoriaSeleccionada, setisCarroOpen, totalUnidades } = useApp();
+
+    const filtrar = (categoria) => {
+      if (setCategoriaSeleccionada) {
+        setCategoriaSeleccionada(categoria);
+      }
+    };
 
     return (
     <>
@@ -46,34 +53,34 @@ export default function NavBar(){
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <a className="dropdown-item" href="#catalogo" onClick="filtrar('Todos Los Productos')"> Todos Los Productos</a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Todos Los Productos')}> Todos Los Productos</a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#catalogo" onClick="filtrar('Productos Sin Azúcar')">Productos Sin Azúcar</a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Productos Sin Azúcar')}>Productos Sin Azúcar</a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#catalogo" onClick="filtrar('Tortas Cuadradas')">Tortas Cuadradas</a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Tortas Cuadradas')}>Tortas Cuadradas</a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#catalogo"  onClick="filtrar('Tortas Circulares')">Tortas Circulares</a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Tortas Circulares')}>Tortas Circulares</a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#catalogo"  onClick="filtrar('Postres Individuales')">Postres Individuales </a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Postres Individuales')}>Postres Individuales </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#catalogo"  onClick="filtrar('Pastelería Tradicional')">Pasteleria Tradicional</a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Pastelería Tradicional')}>Pasteleria Tradicional</a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#catalogo"  onClick="filtrar('Productos Sin Gluten')">Productos Sin Gluten</a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Productos Sin Gluten')}>Productos Sin Gluten</a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#catalogo"  onClick="filtrar('Productos Veganos')">Productos Veganos</a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Productos Veganos')}>Productos Veganos</a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#catalogo" onClick="filtrar('Tortas Especiales')">Tortas Especiales</a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Tortas Especiales')}>Tortas Especiales</a>
                   </li>
                   <li>
-                    <a  className= "dropdown-item" href="#catalogo"onClick="filtrar('Más Vendidos')">Productos Más Vendidos</a>
+                    <a className="dropdown-item" href="#catalogo" onClick={() => filtrar('Más Vendidos')}>Productos Más Vendidos</a>
                   </li>
                 </ul>
               </li>
@@ -81,12 +88,15 @@ export default function NavBar(){
               <button
                 type="button"
                 className="carrito btn-nav position-relative"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#carritoOffcanvas"
-                aria-controls="carritoOffcanvas"
+                onClick={() => setisCarroOpen(true)}
+                aria-label="Abrir carrito"
               >
                 <i className="bi bi-cart"></i>
-                
+                {totalUnidades > 0 && (
+                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: "0.65rem" }}>
+                    {totalUnidades}
+                  </span>
+                )}
               </button>
               <button
                 type="button"
@@ -103,4 +113,4 @@ export default function NavBar(){
       
     </>
     );
-    };
+    };
