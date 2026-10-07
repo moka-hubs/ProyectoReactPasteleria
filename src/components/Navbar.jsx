@@ -2,7 +2,7 @@ import { useApp } from "../context/Contexto";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function NavBar() {
-  const { setCategoriaSeleccionada, setisCarroOpen, totalUnidades } = useApp();
+  const { setCategoriaSeleccionada, setisCarroOpen, setIsLoginOpen, totalUnidades } = useApp();
   const navigate = useNavigate();
 
   const filtrar = (categoria) => {
@@ -16,7 +16,6 @@ export default function NavBar() {
     <header className="header sticky-top">
       <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
-          
           <Link className="navbar-brand" to="/">
             <img
               src="/img/logo.png"
@@ -24,7 +23,7 @@ export default function NavBar() {
               className="img-fluid"
             />
           </Link>
-
+          
           <button
             className="navbar-toggler"
             type="button"
@@ -39,20 +38,14 @@ export default function NavBar() {
 
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-             
               <li className="nav-item nav-home">
                 <Link className="nav-link" aria-current="page" to="/">
                   Inicio
                 </Link>
               </li>
-
               <li className="nav-item">
-                <a className="nav-link" href="/#nosotros">
-                  Sobre Nosotros
-                </a>
+                <a className="nav-link" href="/#nosotros">Sobre Nosotros</a>
               </li>
-
-             
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -64,61 +57,20 @@ export default function NavBar() {
                   Nuestros Productos
                 </a>
                 <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Todos Los Productos')}>
-                      Todos Los Productos
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Productos Sin Azúcar')}>
-                      Productos Sin Azúcar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Tortas Cuadradas')}>
-                      Tortas Cuadradas
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Tortas Circulares')}>
-                      Tortas Circulares
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Postres Individuales')}>
-                      Postres Individuales
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Pastelería Tradicional')}>
-                      Pasteleria Tradicional
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Productos Sin Gluten')}>
-                      Productos Sin Gluten
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Productos Veganos')}>
-                      Productos Veganos
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Tortas Especiales')}>
-                      Tortas Especiales
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Más Vendidos')}>
-                      Productos Más Vendidos
-                    </a>
-                  </li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Todos Los Productos')}>Todos Los Productos</a></li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Productos Sin Azúcar')}>Productos Sin Azúcar</a></li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Tortas Cuadradas')}>Tortas Cuadradas</a></li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Tortas Circulares')}>Tortas Circulares</a></li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Postres Individuales')}>Postres Individuales</a></li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Pastelería Tradicional')}>Pasteleria Tradicional</a></li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Productos Sin Gluten')}>Productos Sin Gluten</a></li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Productos Veganos')}>Productos Veganos</a></li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Tortas Especiales')}>Tortas Especiales</a></li>
+                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Más Vendidos')}>Productos Más Vendidos</a></li>
                 </ul>
               </li>
             </ul>
 
-           
             <button
               type="button"
               className="carrito btn-nav position-relative"
@@ -127,21 +79,17 @@ export default function NavBar() {
             >
               <i className="bi bi-cart"></i>
               {totalUnidades > 0 && (
-                <span
-                  className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                  style={{ fontSize: "0.65rem" }}
-                >
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: "0.65rem" }}>
                   {totalUnidades}
                 </span>
               )}
             </button>
 
-            
             <button
               type="button"
               className="btn-nav"
-              data-bs-toggle="modal"
-              data-bs-target="#loginModal"
+              onClick={() => setIsLoginOpen && setIsLoginOpen(true)}
+              aria-label="Iniciar sesión"
             >
               <i className="bi bi-person"></i>
             </button>
