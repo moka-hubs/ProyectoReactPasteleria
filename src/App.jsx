@@ -5,9 +5,9 @@ import { CarritoOffcanvas } from './components/CarritoOffCanvas'
 import Home from './pages/Home'
 import DetalleProducto from './pages/DetalleProducto'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import  ModalAgregado  from './components/Modales/ModalAgregado'
-import  ModalRecuperar  from './components/Modales/ModalRecuperar'
 import ModalLogin from './components/Modales/ModalLogin'
+import { ModalAgregado } from './components/Modales/ModalAgregado'
+import { RecuperarModal } from './components/Modales/ModalRecuperar'
 
 function App() {
   return (
@@ -22,8 +22,8 @@ function App() {
 
         <Footer />
         <CarritoOffcanvas />
-                <ModalAgregado />
-        <ModalRecuperar />
+        <ModalAgregado />
+        <RecuperarModal />
         <ModalLogin />
       </BrowserRouter>
     </AppProvider>

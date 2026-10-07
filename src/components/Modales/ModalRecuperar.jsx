@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useApp } from "../../context/Contexto"
-import App_alert from "./alerts/alerts";
+import App_alert from "../alerts/alerts";
+
 
 
 export const RecuperarModal = () => {
