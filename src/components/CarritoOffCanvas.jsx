@@ -1,6 +1,14 @@
 import { useApp } from "../context/Contexto";
+import { useState } from "react";
+import App_alert from "./alerts/alerts";
 
 export const CarritoOffcanvas = () => {
+
+  
+    const [tipoAlerta, setTipoAlerta] = useState("");
+    const [mostrarAlerta, setMostrarAlerta] = useState(false);
+    const [mensajeAlerta, setMensajeAlerta] = useState("");
+
   const {
     carrito,
     isCarroOpen,
@@ -13,16 +21,22 @@ export const CarritoOffcanvas = () => {
 
   const handleFinalizarCompra = () => {
     if (carrito.length === 0) {
-      alert("Tu carrito está vacío.");
+      setMensajeAlerta("Tu carrito esta vacío");
+      setTipoAlerta("danger");
+      setMostrarAlerta(true);
+      
       return;
     }
-    alert("¡Muchas gracias por tu compra en Pastelería Mil Sabores! En breve nos pondremos en contacto.");
+    setMensajeAlerta("¡Muchas gracias por tu compra en Pastelería Mil Sabores! En breve nos pondremos en contacto.")
+    setTipoAlerta("success")
+    setMostrarAlerta(true);
     vaciarCarrito();
     setisCarroOpen(false);
   };
 
   return (
     <>
+    <App_alert mostrarAlert={mostrarAlerta} cerrarAlert={() => setMostrarAlerta(false)} variant={tipoAlerta} msgAlert={mensajeAlerta}/>
       {isCarroOpen && (
         <div
           className="modal-backdrop fade show"
@@ -35,7 +49,7 @@ export const CarritoOffcanvas = () => {
         className={`offcanvas offcanvas-end ${isCarroOpen ? "show" : ""}`}
         tabIndex="-1"
         style={{
-          visibility: isCarroOpen ? "visible" : "hidden",
+          //visibility: isCarroOpen ? "visible" : "hidden",
           zIndex: 1045,
           backgroundColor: "#fcf8f7"
         }}
