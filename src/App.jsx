@@ -1,23 +1,24 @@
 import { AppProvider } from './context/Contexto'
-import Hero from './components/Hero'
-import Ofertas from './components/Ofertas'
-import Nosotros from './components/Nosotros'
 import Footer from './components/Footer'
-import Catalogo from './components/Catalogo'
 import NavBar from './components/Navbar'
 import { CarritoOffcanvas } from './components/CarritoOffCanvas'
+import Home from './pages/Home'
+import DetalleProducto from './pages/DetalleProducto'
+import {BrowserRouter,Routes,Route} from 'react-router-dom'
 
 function App() {
 
   return (
     <AppProvider>
+        <BrowserRouter>
       <NavBar />
-      <Hero />
-      <Ofertas />
-      <Nosotros/>
-      <Catalogo/>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/producto/:codigo" element={<DetalleProducto />} />
+        </Routes>
       <Footer/>
       <CarritoOffcanvas />
+    </BrowserRouter>
     </AppProvider>
   )
 }

@@ -239,3 +239,11 @@ p {
   scroll-margin-top: 90px;
 }
 
+.container-detalle {
+  margin: 50px auto;
+  border: solid 5px #5d4037;
+  background-color: #ffc0cb;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.15);
+}
