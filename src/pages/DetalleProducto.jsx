@@ -45,7 +45,7 @@ export default function DetalleProducto() {
             />
           </div>
           <div className="col-12 col-md-6">
-            <span className="badge bg-warning text-dark mb-2 px-3 py-2 fs-6">
+            <span className="badge bg-success text-dark mb-2 px-3 py-2 fs-6">
               {producto.categoria}
             </span>
             <h1 className="fw-bold display-6 mb-3">{producto.nombre}</h1>
