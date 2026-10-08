@@ -1,6 +1,7 @@
 import { useApp } from "../context/Contexto";
 import { useParams, useNavigate } from "react-router-dom";
 import CardProducto from "../components/CardProducto";
+import { useEffect } from "react";
 
 export default function DetalleProducto() {
   const { codigo } = useParams();
@@ -8,6 +9,13 @@ export default function DetalleProducto() {
   const { productos, agregarAlCarrito } = useApp();
 
   const producto = productos.find((p) => p.codigo === codigo);
+
+  useEffect(() => {
+  const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+  document.documentElement.style.scrollBehavior = 'auto';
+  window.scrollTo(0, 0);
+  document.documentElement.style.scrollBehavior = originalScrollBehavior;
+}, [codigo]);
 
   if (!producto) {
     return (

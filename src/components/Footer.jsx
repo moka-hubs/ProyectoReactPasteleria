@@ -14,7 +14,7 @@ export default function Footer() {
                     <div className="footer-content-direccion">
                         <h5>Nuestras Sucursales</h5>
                         <li>
-                            <p>Enrique Olivares 4970,Santiago, La Florida</p>
+                            <p>Enrique Olivares 522,Santiago, La Florida</p>
                         </li>
                         <li>
                             <p>Avenida Nueva Providencia 1953, Santiago, Providencia</p>
@@ -39,11 +39,27 @@ export default function Footer() {
                         <p><i className="bi bi-instagram"></i>
                             MilSabores</p>
                     </div>
+
+                <div className="footer-map">
+                <iframe
+                title="Mapa de ubicación"
+                src="https://www.google.com/maps/d/embed?mid=1lor-yPeqU4bmI4M6HKsYBHcGlzVPwLA&ehbc=2E312F&noprof=1"
+                width="120%"
+                height="300"
+                style={{ border: 0 , borderRadius : "8px"}}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                                                        />
                 </div>
 
                 <div className="footer-derechos text-center">
                     <p>© 2026 Todos los derechos reservados</p>
                 </div>
+
+
+                </div>
+
             </footer>
 
 
