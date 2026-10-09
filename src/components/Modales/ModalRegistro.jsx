@@ -5,7 +5,7 @@ import App_alert from "../alerts/alerts";
 
 export const ModalRegistro = () => {
 
-    const {isRegisterOpen, setIsRegisterOpen, register, setIsLoginOpen} = useApp();
+    const {isRegistroOpen, setIsRegistroOpen, register, setIsLoginOpen} = useApp();
 
     const [formData, setFormData] = useState({
         nombre: "",
@@ -20,7 +20,7 @@ export const ModalRegistro = () => {
     const [mensajeAlerta, setMensajeAlerta] = useState("");
     const [tipoAlerta, setTipoAlerta] = useState("");
 
-    if (!isRegisterOpen) {
+    if (!isRegistroOpen) {
         return null;
         
     }
@@ -124,9 +124,158 @@ export const ModalRegistro = () => {
         
     }
 
+    const nuevoUsuario = {
+      nombre,
+      apellido,
+      correo,
+      email: correo,
+      password,
+      tieneDescuento: cupon.trim() === cuponValido,
+      fechaNacimiento: fecha
+    };
+
+
+    const res = register(nuevoUsuario);
+    if (res.success) {
+      setMensajeAlerta("Registro Exitoso , ya puedes ingresar a tu cuenta.")
+      setTipoAlerta("success");
+      setMostrarAlerta(true);
+      setFormData({
+        nombre: "",
+        apellido: "",
+        correo: "",
+        password: "",
+        fecha: "",
+        cupon: ""
+      });
+      setIsRegistroOpen(false);
+      setIsLoginOpen(true);
+    } else {
+      setMensajeAlerta("Cuenta no existe en nuestro registros")
+      setTipoAlerta("danger");
+      setMostrarAlerta(true);
+    }
+  };
+
+
+
+
+
   return(
     <>
     <App_alert mostrarAlert={mostrarAlerta} cerrarAlert={() => setMostrarAlerta(false)} variant={tipoAlerta} msgAlert={mensajeAlerta}/>
+        <div
+        className="modal-backdrop fade show"
+        style={{ zIndex: 1050 }}
+        onClick={() => setIsRegistroOpen(false)}
+      ></div>
+
+      <div
+        className="modal fade show d-block"
+        tabIndex="-1"
+        style={{ zIndex: 1055 }}
+        role="dialog"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content shadow">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5">Crea tu cuenta</h1>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={() => setIsRegistroOpen(false)}
+                aria-label="Cerrar"
+              ></button>
+            </div>
+
+            <div className="modal-body p-4">
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Nombre</label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    className="form-control"
+                    value={formData.nombre}
+                    onChange={handleChange}
+                    placeholder="Ingrese su nombre aquí..."
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Apellido</label>
+                  <input
+                    type="text"
+                    name="apellido"
+                    className="form-control"
+                    value={formData.apellido}
+                    onChange={handleChange}
+                    placeholder="Ingrese su apellido aquí..."
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Correo electrónico</label>
+                  <input
+                    type="email"
+                    name="correo"
+                    className="form-control"
+                    value={formData.correo}
+                    onChange={handleChange}
+                    placeholder="ejemplo@correo.com"
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Contraseña</label>
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Al menos 6 caracteres, letras y números"
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Fecha de Nacimiento</label>
+                  <input
+                    type="date"
+                    name="fecha"
+                    className="form-control"
+                    value={formData.fecha}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Cupón de Bienvenida</label>
+                  <input
+                    type="text"
+                    name="cupon"
+                    className="form-control"
+                    value={formData.cupon}
+                    onChange={handleChange}
+                    placeholder="Opcional (Ej: FELICES50)"
+                  />
+                </div>
+
+                <div className="text-center mt-3">
+                  <button type="submit" className="btn btn-primary w-100 py-2">
+                    Registrarse
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     
     
     </>

@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ModalLogin from './components/Modales/ModalLogin'
 import { ModalAgregado } from './components/Modales/ModalAgregado'
 import { RecuperarModal } from './components/Modales/ModalRecuperar'
+import { ModalRegistro } from './components/Modales/ModalRegistro'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <ModalAgregado />
         <RecuperarModal />
         <ModalLogin />
+        <ModalRegistro/>
       </BrowserRouter>
     </AppProvider>
   )

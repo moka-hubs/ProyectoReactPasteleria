@@ -126,7 +126,7 @@ export default function ModalLogin(){
                                     className="btn btn-link p-0"
                                     onClick={irARecuperar}
                                     >
-                                        ¿Olvidate tu contraseña?
+                                        ¿Olvidaste tu contraseña?
                                     </button>
                                     <button
                                         type="button"
