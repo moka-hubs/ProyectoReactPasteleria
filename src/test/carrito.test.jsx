@@ -39,8 +39,9 @@ test("agregar dos veces el mismo producto deja una sola fila con cantidad 2", ()
   fireEvent.click(screen.getByText("Agregar Torta"));
   fireEvent.click(screen.getByText("Agregar Torta"));
 
-  expect(screen.getByText("Productos: 1")).toBeInTheDocument();
-  expect(screen.getByText("Cantidad: 2")).toBeInTheDocument();
+  expect(screen.getByText("Items: TC001x2")).toBeInTheDocument();
+  expect(screen.getByText("Unidades: 2")).toBeInTheDocument();
+
 });
 
 
