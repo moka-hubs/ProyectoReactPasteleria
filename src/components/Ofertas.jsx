@@ -1,6 +1,10 @@
+import { useApp } from "../context/Contexto"
 
 
 export default function Ofertas(){
+
+   const { setIsLoginOpen, setIsRegistroOpen } = useApp();
+
     return (
          <>
           <section className="ofertas container">
@@ -22,8 +26,7 @@ export default function Ofertas(){
               <button
                 type="button"
                 className="btn-oferta"
-                data-bs-toggle="modal"
-                data-bs-target="#loginModal"
+                onClick={() => setIsLoginOpen(true)}
               >
                 Inicia Sesión
               </button>
@@ -31,8 +34,7 @@ export default function Ofertas(){
               <button
                 type="button"
                 className="btn-oferta"
-                data-bs-toggle="modal"
-                data-bs-target="#registrarModal"
+                onClick={() => setIsRegistroOpen(true)}
               >
                 Registrarse
               </button>

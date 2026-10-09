@@ -30,13 +30,16 @@ export const CarritoOffcanvas = () => {
     setMensajeAlerta("¡Muchas gracias por tu compra en Pastelería Mil Sabores! En breve nos pondremos en contacto.")
     setTipoAlerta("success")
     setMostrarAlerta(true);
-    vaciarCarrito();
-    setisCarroOpen(false);
+    setTimeout(() => {
+      vaciarCarrito();
+      setisCarroOpen(false);
+      setMostrarAlerta(false);
+      setMensajeAlerta("");
+    }, 2000);
   };
 
   return (
     <>
-    <App_alert mostrarAlert={mostrarAlerta} cerrarAlert={() => setMostrarAlerta(false)} variant={tipoAlerta} msgAlert={mensajeAlerta}/>
       {isCarroOpen && (
         <div
           className="modal-backdrop fade show"
@@ -68,6 +71,7 @@ export const CarritoOffcanvas = () => {
         </div>
 
         <div className="offcanvas-body d-flex flex-column justify-content-between p-3">
+          <App_alert mostrarAlert={mostrarAlerta} cerrarAlert={() => setMostrarAlerta(false)} variant={tipoAlerta} msgAlert={mensajeAlerta}/>
           <div id="items-carrito" className="overflow-auto flex-grow-1 pe-1">
             {carrito.length === 0 ? (
               <div className="text-center my-5">

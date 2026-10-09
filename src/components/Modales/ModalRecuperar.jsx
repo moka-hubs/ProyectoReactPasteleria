@@ -19,18 +19,6 @@ export const RecuperarModal = () => {
         
     }
 
-    const rec = recuperarPassword(correo.trim());
-    
-    if (rec.success) {
-        setMensajeAlerta(`¡Cuenta Encontrada! Tu contraseña es: ${rec.password}`)
-        setTipoAlerta("success");
-        setMostrarAlerta(true);
-    }else {
-      setMensajeAlerta(rec.mensaje)
-      setTipoAlerta("danger");
-      setMostrarAlerta(true);
-    }
-
     const handleClose = () => {
         setisRecuperarOpen(false);
         setCorreo("");
@@ -44,13 +32,24 @@ export const RecuperarModal = () => {
           setMensajeAlerta("Por favor, ingrese un correo electronónico")
           setTipoAlerta("danger");
           setMostrarAlerta(true);
-            
+          return;
+        }
+
+        const rec = recuperarPassword(correo.trim());
+
+        if (rec.success) {
+            setMensajeAlerta(`¡Cuenta Encontrada! Tu contraseña es: ${rec.password}`)
+            setTipoAlerta("success");
+            setMostrarAlerta(true);
+        } else {
+            setMensajeAlerta("Cuenta no existe en nuestros registros ")
+            setTipoAlerta("danger");
+            setMostrarAlerta(true);
         }
     }
 
     return (
         <>
-        <App_alert mostrarAlert={mostrarAlerta} cerrarAlert={() => setMostrarAlerta(false)} variant={tipoAlerta} msgAlert={mensajeAlerta}/>
         <div
         className="modal-backdrop fade show"
         style={{ zIndex: 1050 }}
@@ -76,6 +75,8 @@ export const RecuperarModal = () => {
             </div>
 
             <div className="modal-body p-4">
+              <App_alert mostrarAlert={mostrarAlerta} cerrarAlert={() => setMostrarAlerta(false)} variant={tipoAlerta} msgAlert={mensajeAlerta}/>
+
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label fw-semibold">Correo electrónico</label>

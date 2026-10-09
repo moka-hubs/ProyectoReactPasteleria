@@ -25,6 +25,21 @@ export const ModalRegistro = () => {
         
     }
 
+    const finalizarRegistro = () => {
+        setMostrarAlerta(false);
+        setMensajeAlerta("");
+        setIsRegistroOpen(false);
+        setIsLoginOpen(false);
+    };
+
+    const handleClose = () => {
+        finalizarRegistro();
+    };
+
+    const cerrarAlerta = () => {
+        setMostrarAlerta(false);
+    };
+
    const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -148,10 +163,9 @@ export const ModalRegistro = () => {
         fecha: "",
         cupon: ""
       });
-      setIsRegistroOpen(false);
-      setIsLoginOpen(true);
+      setTimeout(finalizarRegistro, 1500);
     } else {
-      setMensajeAlerta("Cuenta no existe en nuestro registros")
+      setMensajeAlerta(res.message)
       setTipoAlerta("danger");
       setMostrarAlerta(true);
     }
@@ -163,11 +177,10 @@ export const ModalRegistro = () => {
 
   return(
     <>
-    <App_alert mostrarAlert={mostrarAlerta} cerrarAlert={() => setMostrarAlerta(false)} variant={tipoAlerta} msgAlert={mensajeAlerta}/>
         <div
         className="modal-backdrop fade show"
         style={{ zIndex: 1050 }}
-        onClick={() => setIsRegistroOpen(false)}
+        onClick={handleClose}
       ></div>
 
       <div
@@ -183,12 +196,14 @@ export const ModalRegistro = () => {
               <button
                 type="button"
                 className="btn-close"
-                onClick={() => setIsRegistroOpen(false)}
+                onClick={handleClose}
                 aria-label="Cerrar"
               ></button>
             </div>
 
             <div className="modal-body p-4">
+              <App_alert mostrarAlert={mostrarAlerta} cerrarAlert={cerrarAlerta} variant={tipoAlerta} msgAlert={mensajeAlerta}/>
+
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label fw-semibold">Nombre</label>
