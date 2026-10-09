@@ -147,7 +147,7 @@ export function AppProvider({ children }) {
     usuarios.push(nuevoUsuario);
     localStorage.setItem(STORAGE_USUARIOS, JSON.stringify(usuarios));
 
-    // Agregar también a la lista de clientes para el dashboard
+    
     const nuevosClientes = [
       ...clientes,
       {

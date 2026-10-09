@@ -6,15 +6,27 @@ import { afterEach } from "vitest";
 
 
 function CarritoDemo() {
-  const { carrito, agregarAlCarrito } = useApp();
+  const {
+    carrito,
+    agregarAlCarrito,
+    eliminarDelCarrito,
+    vaciarCarrito,
+    totalCarrito,
+    totalUnidades,
+  } = useApp();
+
   return (
     <div>
       <button onClick={() => agregarAlCarrito("TC001")}>Agregar Torta</button>
-      <p>Productos: {carrito.length}</p>
-      <p>Cantidad: {carrito[0]?.cantidad ?? 0}</p>
+      <button onClick={() => eliminarDelCarrito("TC001")}>Eliminar producto</button>
+      <button onClick={vaciarCarrito}>Vaciar</button>
+      <p>Unidades: {totalUnidades}</p>
+      <p>Total: {totalCarrito}</p>
+      <p>Items: {carrito.map((i) => `${i.codigo}x${i.cantidad}`).join(", ") || "vacío"}</p>
     </div>
   );
 }
+
 
     afterEach(() => {
   cleanup();
@@ -45,5 +57,23 @@ test("Validar que el local storage almacene los productos", () => {
   expect(guardar).toHaveLength(1);
   expect(guardar[0].codigo).toBe("TC001");
   expect(guardar[0].cantidad).toBe(1);
+});
+
+
+test("Validar que el boton vaciar carrito limpie el carro en el local storage" , () =>{
+  render(
+    <AppProvider>
+      <CarritoDemo/>
+    </AppProvider>
+  );
+  fireEvent.click(screen.getByText("Agregar Torta"));
+  expect(JSON.parse(localStorage.getItem("carrito"))).toHaveLength(1);
+
+  fireEvent.click(screen.getByText("Vaciar"));
+
+  expect(screen.getByText("Items: vacío")).toBeInTheDocument();
+  expect(screen.getByText("Unidades: 0")).toBeInTheDocument();
+  expect(localStorage.getItem("carrito")).toBe("[]");
+  expect(JSON.parse(localStorage.getItem("carrito"))).toEqual([]);
 });
 
