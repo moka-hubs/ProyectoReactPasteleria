@@ -16,7 +16,7 @@ export default function Productos({ producto }) {
           <img
             src={`/img/${producto.imagen}`}
             alt={producto.nombre}
-            className="img-fluid my-3"
+            className="img-fluid my-3 mt-2"
             style={{ maxHeight: "250px", objectFit: "cover" }}
           />
         </Link>
@@ -29,9 +29,7 @@ export default function Productos({ producto }) {
         <p className="precio-card fw-bold text-center text-success my-2">
           ${producto.precio} CLP
         </p>
-        <p className="descripcion-card small text-muted flex-grow-1 text-center">
-          {producto.descripcion}
-        </p>
+
 
         <button
           className="btn btn-custom btn-agregar mt-auto w-100"
@@ -39,7 +37,7 @@ export default function Productos({ producto }) {
         >
           Agregar al carro
         </button>
-        <div className="d-flex flex-column gap-2 mt-auto">
+        <div className="d-flex flex-column gap-1 mt-1">
           <Link
             to={`/producto/${producto.codigo}`}
             className="btn btn-custom btn-agregar mt-auto w-100"
