@@ -3,6 +3,8 @@ import Hero from '../components/Hero';
 import Ofertas from '../components/Ofertas';
 import Nosotros from '../components/Nosotros';
 import Catalogo from '../components/Catalogo';
+import Resenas from '../components/Resenas';
+
 export default function Home() {
   return (
     <>
@@ -10,6 +12,7 @@ export default function Home() {
       <Ofertas />
       <Nosotros />
       <Catalogo />
+      <Resenas />
     </>
   );
 }
