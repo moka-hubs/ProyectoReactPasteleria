@@ -30,6 +30,8 @@ test("El producto se debe agregar al carrito al hacer click en Agregar al carro"
     </AppProvider>,
   );
 
+  fireEvent.click(screen.getByText("Agregar al carro"));
+
   const carritoGuardado = JSON.parse(localStorage.getItem("carrito"));
   expect(carritoGuardado).toHaveLength(1);
   expect(carritoGuardado[0].codigo).toBe("TC001");
