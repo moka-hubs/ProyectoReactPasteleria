@@ -111,7 +111,7 @@ export function AppProvider({ children }) {
   const totalUnidades = carrito.reduce((sum, item) => sum + item.cantidad, 0);
 
   const login = (correo, password) => {
-    if (correo === "admin@pasteleria.cl" && password === "admin12345678") {
+    if (correo === "admin@pasteleria.cl" && password === "admin1234") {
       const adminUser = { nombre: "Admin", correo, isAdmin: true };
       setCurrentUser(adminUser);
       return { success: true, isAdmin: true };
