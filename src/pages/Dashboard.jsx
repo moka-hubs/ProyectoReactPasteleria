@@ -33,5 +33,69 @@ const pedidosRecientes = [
 const colorEstado = [
     Entregado: "bg-success",
     "En preparación": "bg-warning text-dark",
-    Pendiente: "bg-secondary",   
+    Pendiente: "bg-secondary",
 ]
+
+export default function Dashboard() {
+    const maximo = Math.max(...ventasPorCategoria.map((c) => c.monto));
+
+    return (
+        <main  className="container my-5">
+            <h1 className="fs-2">Panel de Administración</h1>
+            <p className="fs-6 mb-4">
+                Vista de ejemplo del panel. Los datos son ilustrativos.
+            </p>
+
+            <div>
+                {kpis.map((k) => (
+                    <div key = {k.titulo} className="col-6 col-lg-3">
+                        <div className="card border-0 shadow-sm h-100">
+                            <div className="card-body">
+                                <div className="d-flex justify-content-between mb-2">
+                                    <span className="text-muted small fw-semibold">{k.titulo}</span>
+                                    <i className={`bi ${k.icono} fs-4`} style={{ color: "#d25380" }}></i>
+                                </div>
+                                <div className="fs-4 fw-bold text-nowrap" style={{ color: "#5d4037"}}>
+                                    {k.valor}
+                                </div>
+                                <div className="text-muted small">{k.detalle}</div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="row g-3 mb-4">
+                <div className="col-12 col-lg-6">
+                    <div className="card border-0 shadow-sm h-100">
+                        <div className="card-body">
+                            <h5 className="card-title mb-4" style={{ color: "#5d4037"}}>
+                                Ventas por categoria
+                            </h5>
+                            {ventasPorCategoria.map((c) => (
+                                <div key={c.categoria} className="mb-3">
+                                    <div className="d-flex justify-content-between small mb-1">
+                                        <span>{c.categoria}</span>
+                                        <span className="fw-semibold">{c-texto}</span>
+                                    </div>
+                                    <div className="progress" style={{ height: "10px"}}>
+                                        <div
+                                            className="progress-bar"
+                                            style={{
+                                                width: `${(c.monto / maximo) * 100}%`,
+                                                backgroundColor: "#d25380",
+                                           }}
+                                           ></div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="col-12 col-lg-6">
+                </div>
+            </div>
+        </main>
+    );
+}
