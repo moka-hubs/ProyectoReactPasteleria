@@ -47,7 +47,7 @@ export function AppProvider({ children }) {
           nombre: "Administrador",
           apellido: "Pastelería",
           email: "admin@pasteleria.cl",
-          password: "admin12345678",
+          password: "admin1234",
           isAdmin: true,
         });
         localStorage.setItem(STORAGE_USUARIOS, JSON.stringify(usuarios));

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const kpis = [
   {
     titulo: "Ventas del mes",
@@ -88,6 +90,10 @@ const colorEstado = {
 export default function Dashboard() {
   const maximo = Math.max(...ventasPorCategoria.map((c) => c.monto));
 
+  useEffect(() => {
+    window.scrollTo(0,0);
+  }, []);
+  
   return (
     <main className="container my-5">
       <h1 className="fs-2">Panel de Administración</h1>
@@ -95,7 +101,7 @@ export default function Dashboard() {
         Vista de ejemplo del panel. Los datos son ilustrativos.
       </p>
 
-      <div>
+      <div className="row g-3 mb-4">
         {kpis.map((k) => (
           <div key={k.titulo} className="col-6 col-lg-3">
             <div className="card border-0 shadow-sm h-100">
@@ -133,7 +139,7 @@ export default function Dashboard() {
                 <div key={c.categoria} className="mb-3">
                   <div className="d-flex justify-content-between small mb-1">
                     <span>{c.categoria}</span>
-                    <span className="fw-semibold">{c - texto}</span>
+                    <span className="fw-semibold">{c.texto}</span>
                   </div>
                   <div className="progress" style={{ height: "10px" }}>
                     <div

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useApp } from "../../context/Contexto";
 import App_alert from "../alerts/alerts";
 
-export default function ModalLogin(){
+export default function ModalLogin({ onAdminLogin }){
     const [mostrarAlerta, setMostrarAlerta] = useState(false);
     const [mensajeAlerta, setMensajeAlerta] = useState("");
     const [correo, setCorreo] = useState("");
@@ -52,6 +52,10 @@ export default function ModalLogin(){
         }
 
         handleClose();
+
+        if (resultado.isAdmin && onAdminLogin) {
+            onAdminLogin();
+        }
     };
 
     return (
