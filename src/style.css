@@ -167,6 +167,11 @@ p {
   color: #ffffff;
 }
 
+.modal .btn-oferta {
+  width: 100%;
+  margin: 5px 0;
+}
+
 .footer-container {
   display: flex;
   justify-content: space-evenly;

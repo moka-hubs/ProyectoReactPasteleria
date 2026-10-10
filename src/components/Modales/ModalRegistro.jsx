@@ -282,7 +282,7 @@ export const ModalRegistro = () => {
                 </div>
 
                 <div className="text-center mt-3">
-                  <button type="submit" className="btn btn-primary w-100 py-2">
+                  <button type="submit" className="btn-oferta">
                     Registrarse
                   </button>
                 </div>

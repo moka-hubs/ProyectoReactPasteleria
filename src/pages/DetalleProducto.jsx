@@ -10,6 +10,13 @@ export default function DetalleProducto() {
 
   const producto = productos.find((p) => p.codigo === codigo);
 
+  const volverAlCatalogo = () => {
+    navigate("/");
+    setTimeout(() => {
+      document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
   useEffect(() => {
   const originalScrollBehavior = document.documentElement.style.scrollBehavior;
   document.documentElement.style.scrollBehavior = 'auto';
@@ -75,6 +82,14 @@ export default function DetalleProducto() {
                 >
                   Agregar al Carro
                 </button>
+                <div className="d-grid gap-2">
+                  <button
+                  className="py-3 fw-bold shadow-sm btn-oferta"
+                  onClick={volverAlCatalogo}
+                  >
+                    Volver a Catalogo
+                  </button>
+                </div>
               </div>
             </div>
           </div>

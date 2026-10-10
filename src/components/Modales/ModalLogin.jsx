@@ -11,7 +11,6 @@ export default function ModalLogin(){
     const {
         isLoginOpen,
         setIsLoginOpen,
-        setIsRegistroOpen,
         setisRecuperarOpen,
         login,
     } = useApp();
@@ -28,10 +27,7 @@ export default function ModalLogin(){
         setMensajeAlerta("");
     };
 
-    const irARegistro = () => {
-        handleClose();
-        setIsRegistroOpen(true);
-    };
+
 
     const irARecuperar = () => {
         handleClose();
@@ -42,7 +38,7 @@ export default function ModalLogin(){
         e.preventDefault();
 
         if (!correo.trim() || !password) {
-            setMensajeAlerta("debes ingresar tu correo y tu contraseña")
+            setMensajeAlerta("Debes ingresar tu correo y tu contraseña")
             setMostrarAlerta(true);
             return
         }
@@ -75,7 +71,7 @@ export default function ModalLogin(){
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content shadow">
                         <div className="modal-header">
-                            <h5 className="modal-title fs-4">Iniciar Sesion</h5>
+                            <h1 className="modal-title fs-5">Iniciar Sesion</h1>
                             <button 
                                 type="button"
                                 className="btn-close"
@@ -115,26 +111,20 @@ export default function ModalLogin(){
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     autoComplete="current-password"
+                                    placeholder="Ejemplo1234@"
                                     />
                                 </div>
 
-                                <button type="submit" className="btn btn-custom w-100 py-2 mb-3">Ingresar</button>
+                                <button type="submit" className="btn-oferta">Ingresar</button>
 
                                 <div className="d-flex justify-content between small">
                                     <button
                                     type="button"
-                                    className="btn btn-link p-0"
+                                    className="btn-oferta"
                                     onClick={irARecuperar}
                                     >
                                         ¿Olvidaste tu contraseña?
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-link p-0"
-                                        onClick={irARegistro}
-                                    >
-                                        Crear cuenta
-                                    </button>
+                                    </button>    
                                 </div>
 
                                 
