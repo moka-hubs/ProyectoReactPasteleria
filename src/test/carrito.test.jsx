@@ -78,3 +78,19 @@ test("Validar que el boton vaciar carrito limpie el carro en el local storage" ,
   expect(JSON.parse(localStorage.getItem("carrito"))).toEqual([]);
 });
 
+
+test("eliminar un producto lo quita del carrito", () => {
+  render(
+  <AppProvider>
+    <CarritoDemo />
+    </AppProvider>);
+
+  fireEvent.click(screen.getByText("Agregar Torta"));
+  expect(screen.getByText("Items: TC001x1")).toBeInTheDocument();
+
+  fireEvent.click(screen.getByText("Eliminar producto"));
+
+  expect(screen.getByText("Items: vacío")).toBeInTheDocument();
+  expect(JSON.parse(localStorage.getItem("carrito"))).toEqual([]);
+});
+
