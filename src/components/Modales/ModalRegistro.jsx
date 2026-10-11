@@ -86,7 +86,7 @@ export const ModalRegistro = () => {
     const {nombre,apellido,correo,password,fecha,cupon} = formData;
     const cuponValido = "FELICES50";
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    const regexPassword = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
 
 
     if (nombre=='' || nombre.length <3 ) {
@@ -143,7 +143,6 @@ export const ModalRegistro = () => {
       nombre,
       apellido,
       correo,
-      email: correo,
       password,
       tieneDescuento: cupon.trim() === cuponValido,
       fechaNacimiento: fecha

@@ -40,13 +40,13 @@ export function AppProvider({ children }) {
     try {
       let usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS)) || [];
       const adminExists = usuarios.some(
-        (u) => u.email === "admin@pasteleria.cl",
+        (u) => u.correo === "admin@pasteleria.cl",
       );
       if (!adminExists) {
         usuarios.push({
           nombre: "Administrador",
           apellido: "Pastelería",
-          email: "admin@pasteleria.cl",
+          correo: "admin@pasteleria.cl",
           password: "admin1234",
           isAdmin: true,
         });
@@ -119,8 +119,7 @@ export function AppProvider({ children }) {
 
     const usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS)) || [];
     const usuario = usuarios.find(
-      (u) =>
-        (u.correo === correo || u.email === correo) && u.password === password,
+      (u) => u.correo === correo && u.password === password,
     );
 
     if (usuario) {
@@ -133,10 +132,7 @@ export function AppProvider({ children }) {
 
   const register = (nuevoUsuario) => {
     const usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS)) || [];
-    const existe = usuarios.find(
-      (u) =>
-        u.correo === nuevoUsuario.correo || u.email === nuevoUsuario.correo,
-    );
+    const existe = usuarios.find((u) => u.correo === nuevoUsuario.correo);
     if (existe) {
       return {
         success: false,
@@ -152,7 +148,7 @@ export function AppProvider({ children }) {
       ...clientes,
       {
         nombre: `${nuevoUsuario.nombre} ${nuevoUsuario.apellido}`,
-        email: nuevoUsuario.correo,
+        correo: nuevoUsuario.correo,
       },
     ];
     setClientes(nuevosClientes);
@@ -163,9 +159,7 @@ export function AppProvider({ children }) {
 
   const recuperarPassword = (correo) => {
     const usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS)) || [];
-    const usuario = usuarios.find(
-      (u) => u.correo === correo || u.email === correo,
-    );
+    const usuario = usuarios.find((u) => u.correo === correo);
     if (usuario) {
       return { success: true, password: usuario.password };
     }

@@ -22,5 +22,5 @@ test("login con campos vacíos muestra error", () => {
 
   fireEvent.click(screen.getByText("Ingresar"));
 
-  expect(screen.getByText("debes ingresar tu correo y tu contraseña")).toBeInTheDocument();
+  expect(screen.getByText("Debes ingresar tu correo y tu contraseña")).toBeInTheDocument();
 });

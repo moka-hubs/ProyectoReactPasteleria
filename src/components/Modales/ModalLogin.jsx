@@ -5,6 +5,7 @@ import App_alert from "../alerts/alerts";
 export default function ModalLogin({ onAdminLogin }){
     const [mostrarAlerta, setMostrarAlerta] = useState(false);
     const [mensajeAlerta, setMensajeAlerta] = useState("");
+    const [tipoAlerta, setTipoAlerta] = useState("danger");
     const [correo, setCorreo] = useState("");
     const [password, setPassword] = useState("");
 
@@ -39,6 +40,7 @@ export default function ModalLogin({ onAdminLogin }){
 
         if (!correo.trim() || !password) {
             setMensajeAlerta("Debes ingresar tu correo y tu contraseña")
+            setTipoAlerta("danger");
             setMostrarAlerta(true);
             return
         }
@@ -47,15 +49,24 @@ export default function ModalLogin({ onAdminLogin }){
 
         if(!resultado.success) {
             setMensajeAlerta(resultado.message);
+            setTipoAlerta("danger");
             setMostrarAlerta(true);
             return;
         }
 
-        handleClose();
+        setCorreo("");
+        setPassword("");
+        setMensajeAlerta("¡Sesión iniciada correctamente!");
+        setTipoAlerta("success");
+        setMostrarAlerta(true);
 
-        if (resultado.isAdmin && onAdminLogin) {
-            onAdminLogin();
-        }
+        setTimeout(() => {
+            handleClose();
+
+            if (resultado.isAdmin && onAdminLogin) {
+                onAdminLogin();
+            }
+        }, 2000);
     };
 
     return (
@@ -88,7 +99,7 @@ export default function ModalLogin({ onAdminLogin }){
                             <App_alert
                                 mostrarAlert={mostrarAlerta}
                                 cerrarAlert={() => setMostrarAlerta(false)}
-                                variant="danger"
+                                variant={tipoAlerta}
                                 msgAlert={mensajeAlerta}
                             />
 
