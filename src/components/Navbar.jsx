@@ -12,11 +12,15 @@ export default function NavBar() {
     navigate("/#catalogo");
   };
 
+  const irInicio = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <header className="header sticky-top">
       <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
+          <Link className="navbar-brand" to="/" onClick={irInicio}>
             <img
               src="/img/logo.png"
               alt="Logo Pastelería Mil Sabores"
@@ -39,7 +43,7 @@ export default function NavBar() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item nav-home">
-                <Link className="nav-link" aria-current="page" to="/">
+                <Link className="nav-link" aria-current="page" to="/" onClick={irInicio}>
                   Inicio
                 </Link>
               </li>
