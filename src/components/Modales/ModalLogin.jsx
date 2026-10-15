@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useApp } from "../../context/Contexto";
+import { useApp } from "../../context/useApp";
 import App_alert from "../alerts/alerts";
 
 export default function ModalLogin({ onAdminLogin }){

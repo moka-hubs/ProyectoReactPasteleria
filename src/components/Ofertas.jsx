@@ -1,4 +1,4 @@
-import { useApp } from "../context/Contexto"
+import { useApp } from "../context/useApp"
 
 
 export default function Ofertas(){

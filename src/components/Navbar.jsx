@@ -1,4 +1,4 @@
-import { useApp } from "../context/Contexto";
+import { useApp } from "../context/useApp";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function NavBar() {

@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { expect, test, afterEach } from "vitest";
-import { AppProvider, useApp } from "../context/Contexto";
+import { AppProvider } from "../context/Contexto";
+import { useApp } from "../context/useApp";
 import { useState } from "react";
 
 function RecuperarDemo() {

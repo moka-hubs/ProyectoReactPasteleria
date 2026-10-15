@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
 import Catalogo from "../components/Catalogo";
-import { AppProvider, useApp } from "../context/Contexto";
+import { AppProvider } from "../context/Contexto";
+import { useApp } from "../context/useApp";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 

@@ -1,4 +1,4 @@
-import { useApp } from "../context/Contexto";
+import { useApp } from "../context/useApp";
 import { useParams, useNavigate } from "react-router-dom";
 import CardProducto from "../components/CardProducto";
 import { useEffect } from "react";

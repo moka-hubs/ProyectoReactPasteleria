@@ -1,7 +1,6 @@
-import { useState } from 'react'
 import Productos from './CardProducto';
-import {productosIniciales,CATEGORIAS} from '../data/productos';
-import { useApp } from '../context/Contexto';
+import {productosIniciales} from '../data/productos';
+import { useApp } from '../context/useApp';
 
 
 export default function Catalogo() {

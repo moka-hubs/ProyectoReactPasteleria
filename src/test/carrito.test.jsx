@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
-import { AppProvider, useApp } from "../context/Contexto";
+import { AppProvider } from "../context/Contexto";
+import { useApp } from "../context/useApp";
 import { expect, test } from "vitest";
 import { afterEach } from "vitest";
 

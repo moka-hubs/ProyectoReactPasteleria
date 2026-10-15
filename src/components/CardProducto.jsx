@@ -1,5 +1,4 @@
-import React from "react";
-import { useApp } from "../context/Contexto";
+import { useApp } from "../context/useApp";
 import { Link } from "react-router-dom";
 
 export default function Productos({ producto }) {

@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { productosIniciales, clientesIniciales } from "../data/productos";
-
-const Contexto = createContext();
+import { Contexto } from "./useApp";
 
 const STORAGE_USUARIOS = "pasteleria_mil_sabores";
 const STORAGE_CARRITO = "carrito";
@@ -209,5 +208,3 @@ export function AppProvider({ children }) {
     </Contexto.Provider>
   );
 }
-
-export const useApp = () => useContext(Contexto);

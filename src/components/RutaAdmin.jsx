@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useApp } from "../context/Contexto";
+import { useApp } from "../context/useApp";
 
 export default function RutaAdmin({ children }) {
     const { currentUser } = useApp();
