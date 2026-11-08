@@ -1,6 +1,6 @@
 
 
-@api_url=54.227.92.42
+@api_url=34.203.14.170
 
 ###Login
 POST http://{{api_url}}/auth/login HTTP/1.1
