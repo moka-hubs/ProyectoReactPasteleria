@@ -23,6 +23,27 @@ content-type: application/json
     
 }
 
+###Listar Productos
+GET http://{{api_url}}/api/v1/productos  HTTP/1.1
+content-type: application/json
+
+
+###Buscar Producto
+GET http://{{api_url}}/api/v1/productos/TC002  HTTP/1.1
+content-type: application/json
+
+
+###Listar Categorias
+GET http://{{api_url}}/api/v1/categorias  HTTP/1.1
+content-type: application/json
+
+
+###Buscar Categoria
+GET http://{{api_url}}/api/v1/categorias/1  HTTP/1.1
+content-type: application/json
+
+
+
 
 
 
