@@ -1,15 +1,28 @@
 
 
-@api_url=34.203.14.170
-
+@api_url=localhost:8080
+@token=eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJDTElFTlRFIiwic3ViIjoicGVkcm8xMjM0QGdtYWlsLmNvbSIsImlhdCI6MTc5NDkxOTA0NywiZXhwIjoxNzk1MDA1NDQ3fQ.qd4spqyZe0o16lcM4Ojw9dNWKZhaLKUdL0R8FA_AGvI
 ###Login
-POST http://{{api_url}}/auth/login HTTP/1.1
+POST http://{{api_url}}/api/v1/auth/login HTTP/1.1
 content-type: application/json
 
 {
-    "username": "admin",
-    "password": "admin"
+    "correo": "pedro1234@gmail.com",
+    "password": "pedro1234"
 }
+
+###Registrar
+POST http://{{api_url}}/api/v1/auth/registro HTTP/1.1
+content-type: application/json
+{
+    "nombreUsuario":"Pedro",
+    "apellidoUsuario":"Manriquez",
+    "correoUsuario":"pedro1234@gmail.com",
+    "contraseniaUsuario":"pedro1234",
+    "fechaNacUsuario":"1994-10-20",
+    
+}
+
 
 
 
