@@ -1,26 +1,64 @@
 
 
 @api_url=localhost:8080
-@token=eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJDTElFTlRFIiwic3ViIjoicGVkcm8xMjM0QGdtYWlsLmNvbSIsImlhdCI6MTc5NDkxOTA0NywiZXhwIjoxNzk1MDA1NDQ3fQ.qd4spqyZe0o16lcM4Ojw9dNWKZhaLKUdL0R8FA_AGvI
-###Login
+@token=eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJBRE1JTiIsInN1YiI6ImFkbWluQHBhc3RlbGVyaWEuY29tIiwiaWF0IjoxNzk0OTI2OTA0LCJleHAiOjE3OTUwMTMzMDR9.iScCaEBD-O9sGElD9b_4Ue4DYL9unkeRC0LI8Cb1E3Y
+
+
+////SOLO ADMIN PUEDE ELIMINAR,ACTUALIZAR Y EDITAR PRODUCTOS Y CATEGORIAS 
+
+###Login Admin
+POST http://{{api_url}}/api/v1/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "correo": "admin@pasteleria.com",
+    "password": "Admin1234"
+}
+
+###Registrar Cliente // MOSTRARA ERROR 409 CONFLICT YA QUE EXISTE UNA CUENTA REGISTRADA CON ESE CORREO
+POST http://{{api_url}}/api/v1/auth/registro HTTP/1.1
+content-type: application/json
+
+{
+    "nombreUsuario":"Pedro",
+    "apellidoUsuario":"Manriquez",
+    "correoUsuario":"pedro1234@gmail.com",
+    "contraseniaUsuario":"pedro1234",
+    "fechaNacUsuario":"1994-10-20"
+    
+}
+
+
+###Registrar Cliente 
+POST http://{{api_url}}/api/v1/auth/registro HTTP/1.1
+content-type: application/json
+
+{
+    "nombreUsuario":"Moka",
+    "apellidoUsuario":"Sakai",
+    "correoUsuario":"sakaimoka1234@gmail.com",
+    "contraseniaUsuario":"Moka1789",
+    "fechaNacUsuario":"1999-09-15"
+}
+
+
+###Login Cliente
+POST http://{{api_url}}/api/v1/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "correo": "sakaimoka1234@gmail.com",
+    "password": "Moka1789"
+}
+
+
+###Login Cliente
 POST http://{{api_url}}/api/v1/auth/login HTTP/1.1
 content-type: application/json
 
 {
     "correo": "pedro1234@gmail.com",
     "password": "pedro1234"
-}
-
-###Registrar
-POST http://{{api_url}}/api/v1/auth/registro HTTP/1.1
-content-type: application/json
-{
-    "nombreUsuario":"Pedro",
-    "apellidoUsuario":"Manriquez",
-    "correoUsuario":"pedro1234@gmail.com",
-    "contraseniaUsuario":"pedro1234",
-    "fechaNacUsuario":"1994-10-20",
-    
 }
 
 ###Listar Productos
@@ -39,8 +77,20 @@ content-type: application/json
 
 
 ###Buscar Categoria
-GET http://{{api_url}}/api/v1/categorias/1  HTTP/1.1
+GET http://{{api_url}}/api/v1/categorias/10  HTTP/1.1
 content-type: application/json
+
+
+###Actualizar Categoria 
+PUT http://{{api_url}}/api/v1/categorias/1  HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}} 
+
+{
+    "nombre_categoria" : "Todos Los Productos"
+}
+
+
 
 
 
