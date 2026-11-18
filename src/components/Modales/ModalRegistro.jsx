@@ -144,6 +144,7 @@ export const ModalRegistro = () => {
       apellido,
       correo,
       password,
+      cupon: cupon.trim(),
       tieneDescuento: cupon.trim() === cuponValido,
       fechaNacimiento: fecha
     };
