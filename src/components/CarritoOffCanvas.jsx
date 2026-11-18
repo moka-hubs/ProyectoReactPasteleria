@@ -1,4 +1,5 @@
 import { useApp } from "../context/useApp";
+import { urlImagen } from "../utils/imagen";
 import { useState } from "react";
 import App_alert from "./alerts/alerts";
 
@@ -85,7 +86,7 @@ export const CarritoOffcanvas = () => {
                   className="d-flex align-items-center border-bottom py-3"
                 >
                   <img
-                    src={`/img/${item.imagen}`}
+                    src={urlImagen(item.imagen)}
                     alt={item.nombre}
                     style={{ width: "55px", height: "55px", objectFit: "cover" }}
                     className="me-3 rounded shadow-sm"

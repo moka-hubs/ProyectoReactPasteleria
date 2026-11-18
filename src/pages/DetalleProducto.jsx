@@ -1,4 +1,5 @@
 import { useApp } from "../context/useApp";
+import { urlImagen } from "../utils/imagen";
 import { useParams, useNavigate } from "react-router-dom";
 import CardProducto from "../components/CardProducto";
 import { useEffect } from "react";
@@ -53,7 +54,7 @@ export default function DetalleProducto() {
         <div className="row g-5 align-items-center bg-white p-4 p-md-5 shadow-sm container-detalle">
           <div className="col-12 col-md-6 text-center">
             <img
-              src={`/img/${producto.imagen}`}
+              src={urlImagen(producto.imagen)}
               alt={producto.nombre}
               className="img-fluid rounded-4 shadow-sm"
               style={{ maxHeight: "420px", width: "100%", objectFit: "cover" }}

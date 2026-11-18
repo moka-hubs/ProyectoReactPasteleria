@@ -1,5 +1,6 @@
 import { useApp } from "../context/useApp";
 import { Link } from "react-router-dom";
+import { urlImagen } from "../utils/imagen";
 
 export default function Productos({ producto }) {
   const { agregarAlCarrito } = useApp();
@@ -13,7 +14,7 @@ export default function Productos({ producto }) {
       <div className="cardPasteleria d-flex flex-column h-100 w-100 m-0 p-3">
         <Link to={`/producto/${producto.codigo}`} className="text-center d-block">
           <img
-            src={`/img/${producto.imagen}`}
+            src={urlImagen(producto.imagen)}
             alt={producto.nombre}
             className="img-fluid rounded mb-3"
             style={{ height: "200px", width: "100%", objectFit: "cover" }}
