@@ -2,8 +2,7 @@ import { useApp } from "../context/useApp";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function NavBar() {
-  const { setCategoriaSeleccionada, setisCarroOpen, setIsLoginOpen, totalUnidades } = useApp();
-  const navigate = useNavigate();
+const { setCategoriaSeleccionada, setisCarroOpen, setIsLoginOpen, totalUnidades, currentUser, logout } = useApp();  const navigate = useNavigate();
 
   const filtrar = (categoria) => {
     if (setCategoriaSeleccionada) {
@@ -89,14 +88,46 @@ export default function NavBar() {
               )}
             </button>
 
-            <button
-              type="button"
-              className="btn-nav"
-              onClick={() => setIsLoginOpen && setIsLoginOpen(true)}
-              aria-label="Iniciar sesión"
-            >
-              <i className="bi bi-person"></i>
-            </button>
+            {currentUser ? (
+  <div className="dropdown">
+    <button
+      type="button"
+      className="btn-nav dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-label="Menú de usuario"
+    >
+      <i className="bi bi-person-check-fill"></i>
+    </button>
+    <ul className="dropdown-menu dropdown-menu-end">
+      <li>
+        <Link className="dropdown-item" to="/perfil">
+          <i className="bi bi-person me-2"></i>Mi perfil
+        </Link>
+      </li>
+      {currentUser.isAdmin && (
+        <li>
+          <Link className="dropdown-item" to="/dashboard">
+            <i className="bi bi-speedometer2 me-2"></i>Panel Admin
+          </Link>
+        </li>
+      )}
+      <li>
+        <button type="button" className="dropdown-item" onClick={logout}>
+          <i className="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+        </button>
+      </li>
+    </ul>
+  </div>
+) : (
+  <button
+    type="button"
+    className="btn-nav"
+    onClick={() => setIsLoginOpen && setIsLoginOpen(true)}
+    aria-label="Iniciar sesión"
+  >
+    <i className="bi bi-person"></i>
+  </button>
+)}
           </div>
         </div>
       </nav>
