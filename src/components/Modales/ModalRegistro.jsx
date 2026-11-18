@@ -79,7 +79,7 @@ export const ModalRegistro = () => {
 
   };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     setMensajeAlerta("");
 
@@ -150,7 +150,7 @@ export const ModalRegistro = () => {
     };
 
 
-    const res = register(nuevoUsuario);
+    const res = await register(nuevoUsuario);
     if (res.success) {
       setMensajeAlerta("Registro Exitoso , ya puedes ingresar a tu cuenta.")
       setTipoAlerta("success");

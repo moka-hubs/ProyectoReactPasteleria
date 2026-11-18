@@ -1,9 +1,41 @@
 import { useState, useEffect } from "react";
 import { productosIniciales, clientesIniciales } from "../data/productos";
 import { Contexto } from "./useApp";
+import { login as loginApi, registro as registroApi } from "../api/authApi";
+import {
+  obtenerPerfil,
+  actualizarPerfil as actualizarPerfilApi,
+} from "../api/perfilApi";
+import { getToken, guardarToken, cerrarSesion } from "../auth/auth";
 
-const STORAGE_USUARIOS = "pasteleria_mil_sabores";
 const STORAGE_CARRITO = "carrito";
+const STORAGE_USUARIOS = "pasteleria_mil_sabores"; // solo para el recuperar legacy
+
+// El JWT trae el claim "rol" (JwtService: Map.of("rol", rol.name())).
+// Esto es SOLO para la UI; la autorización real la hace el back.
+function rolDelToken() {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    let base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+    base64 += "=".repeat((4 - (base64.length % 4)) % 4);
+    return JSON.parse(atob(base64)).rol || null;
+  } catch {
+    return null;
+  }
+}
+
+function normalizarPerfil(perfil) {
+  const esAdmin = rolDelToken() === "ADMIN";
+  return {
+    ...perfil,
+    isAdmin: esAdmin,
+    esAdmin,
+    fechaNacUsuario: perfil?.fechaNacUsuario
+      ? String(perfil.fechaNacUsuario).slice(0, 10)
+      : null,
+  };
+}
 
 export function AppProvider({ children }) {
   const [productos] = useState(productosIniciales);
@@ -34,26 +66,32 @@ export function AppProvider({ children }) {
   });
 
   const [currentUser, setCurrentUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(Boolean(getToken()));
+  const [perfilError, setPerfilError] = useState(null);
 
+  // Hidratar la sesión al recargar: si hay token, pedimos el perfil real.
   useEffect(() => {
-    try {
-      let usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS)) || [];
-      const adminExists = usuarios.some(
-        (u) => u.correo === "admin@pasteleria.cl",
-      );
-      if (!adminExists) {
-        usuarios.push({
-          nombre: "Administrador",
-          apellido: "Pastelería",
-          correo: "admin@pasteleria.cl",
-          password: "admin1234",
-          isAdmin: true,
-        });
-        localStorage.setItem(STORAGE_USUARIOS, JSON.stringify(usuarios));
-      }
-    } catch (e) {
-      console.error("Error al inicializar admin:", e);
+    if (!getToken()) {
+      setAuthLoading(false);
+      return;
     }
+    let activo = true;
+    (async () => {
+      try {
+        const perfil = await obtenerPerfil();
+        if (activo) setCurrentUser(normalizarPerfil(perfil));
+      } catch {
+        if (activo) {
+          cerrarSesion();
+          setCurrentUser(null);
+        }
+      } finally {
+        if (activo) setAuthLoading(false);
+      }
+    })();
+    return () => {
+      activo = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -84,8 +122,8 @@ export function AppProvider({ children }) {
   };
 
   const cambiarCantidad = (codigo, delta) => {
-    setCarrito((prev) => {
-      return prev
+    setCarrito((prev) =>
+      prev
         .map((item) => {
           if (item.codigo === codigo) {
             const nuevaCantidad = item.cantidad + delta;
@@ -95,13 +133,11 @@ export function AppProvider({ children }) {
           }
           return item;
         })
-        .filter(Boolean);
-    });
+        .filter(Boolean),
+    );
   };
 
-  const vaciarCarrito = () => {
-    setCarrito([]);
-  };
+  const vaciarCarrito = () => setCarrito([]);
 
   const totalCarrito = carrito.reduce(
     (sum, item) => sum + item.precio * item.cantidad,
@@ -109,53 +145,74 @@ export function AppProvider({ children }) {
   );
   const totalUnidades = carrito.reduce((sum, item) => sum + item.cantidad, 0);
 
-  const login = (correo, password) => {
-    if (correo === "admin@pasteleria.cl" && password === "admin1234") {
-      const adminUser = { nombre: "Admin", correo, isAdmin: true };
-      setCurrentUser(adminUser);
-      return { success: true, isAdmin: true };
-    }
+  const login = async (correo, password) => {
+    setAuthLoading(true);
+    setPerfilError(null);
+    try {
+      const respuesta = await loginApi(correo, password);
+      guardarToken(respuesta.token);
 
-    const usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS)) || [];
-    const usuario = usuarios.find(
-      (u) => u.correo === correo && u.password === password,
-    );
-
-    if (usuario) {
+      const perfil = await obtenerPerfil();
+      const usuario = normalizarPerfil(perfil);
       setCurrentUser(usuario);
-      return { success: true, isAdmin: false, user: usuario };
-    }
 
-    return { success: false, message: "Error en las credenciales" };
-  };
-
-  const register = (nuevoUsuario) => {
-    const usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS)) || [];
-    const existe = usuarios.find((u) => u.correo === nuevoUsuario.correo);
-    if (existe) {
+      return { success: true, isAdmin: usuario.isAdmin, user: usuario };
+    } catch (error) {
+      cerrarSesion();
+      setCurrentUser(null);
       return {
         success: false,
-        message: "El correo ya se encuentra registrado",
+        message: error.message || "Error en las credenciales",
       };
+    } finally {
+      setAuthLoading(false);
     }
-
-    usuarios.push(nuevoUsuario);
-    localStorage.setItem(STORAGE_USUARIOS, JSON.stringify(usuarios));
-
-    
-    const nuevosClientes = [
-      ...clientes,
-      {
-        nombre: `${nuevoUsuario.nombre} ${nuevoUsuario.apellido}`,
-        correo: nuevoUsuario.correo,
-      },
-    ];
-    setClientes(nuevosClientes);
-    localStorage.setItem("clientes", JSON.stringify(nuevosClientes));
-
-    return { success: true };
   };
 
+  const register = async (nuevoUsuario) => {
+    setPerfilError(null);
+    try {
+      const respuesta = await registroApi(nuevoUsuario);
+      guardarToken(respuesta.token);
+
+      const perfil = await obtenerPerfil();
+      const usuario = normalizarPerfil(perfil);
+      setCurrentUser(usuario);
+
+      const nuevosClientes = [
+        ...clientes,
+        {
+          nombre: `${usuario.nombreUsuario} ${usuario.apellidoUsuario}`,
+          correo: usuario.correoUsuario,
+        },
+      ];
+      setClientes(nuevosClientes);
+      localStorage.setItem("clientes", JSON.stringify(nuevosClientes));
+
+      return { success: true, isAdmin: usuario.isAdmin, user: usuario };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message || "No se pudo completar el registro",
+      };
+    }
+  };
+
+  const guardarPerfil = async (datos) => {
+    setPerfilError(null);
+    try {
+      const perfil = await actualizarPerfilApi(datos);
+      const usuario = normalizarPerfil(perfil);
+      setCurrentUser(usuario);
+      return { success: true, user: usuario };
+    } catch (error) {
+      const mensaje = error.message || "No se pudo guardar el perfil";
+      setPerfilError(mensaje);
+      return { success: false, message: mensaje };
+    }
+  };
+
+  // Legacy: lo dejamos para no romper ModalRecuperar ni sus tests.
   const recuperarPassword = (correo) => {
     const usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS)) || [];
     const usuario = usuarios.find((u) => u.correo === correo);
@@ -164,13 +221,14 @@ export function AppProvider({ children }) {
     }
     return {
       success: false,
-      message:
-        "Este correo no se encuentra registrado en Pasteleria Mil Sabores",
+      message: "Este correo no se encuentra registrado en Pasteleria Mil Sabores",
     };
   };
 
   const logout = () => {
+    cerrarSesion();
     setCurrentUser(null);
+    setPerfilError(null);
   };
 
   return (
@@ -198,8 +256,11 @@ export function AppProvider({ children }) {
         ModalAgregadoInfo,
         setModalAgregado,
         currentUser,
+        authLoading,
+        perfilError,
         login,
         register,
+        actualizarPerfil: guardarPerfil,
         recuperarPassword,
         logout,
       }}

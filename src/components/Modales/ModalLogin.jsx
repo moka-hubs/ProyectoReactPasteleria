@@ -35,7 +35,7 @@ export default function ModalLogin({ onAdminLogin }){
         setisRecuperarOpen(true);
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!correo.trim() || !password) {
@@ -45,7 +45,7 @@ export default function ModalLogin({ onAdminLogin }){
             return
         }
 
-        const resultado = login(correo.trim(), password);
+        const resultado = await login(correo.trim(), password);
 
         if(!resultado.success) {
             setMensajeAlerta(resultado.message);
