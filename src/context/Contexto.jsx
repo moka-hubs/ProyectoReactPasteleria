@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { productosIniciales, clientesIniciales } from "../data/productos";
 import { Contexto } from "./useApp";
 import { login as loginApi, registro as registroApi } from "../api/authApi";
+import { obtenerProducto } from "../api/productosApi";
 import {
   obtenerPerfil,
   actualizarPerfil as actualizarPerfilApi,
@@ -38,7 +39,7 @@ function normalizarPerfil(perfil) {
 }
 
 export function AppProvider({ children }) {
-  const [productos] = useState(productosIniciales);
+  const [productos, setProductos] = useState(productosIniciales);
   const [clientes, setClientes] = useState(() => {
     const guardado = localStorage.getItem("clientes");
     return guardado ? JSON.parse(guardado) : clientesIniciales;
@@ -69,14 +70,36 @@ export function AppProvider({ children }) {
   const [authLoading, setAuthLoading] = useState(Boolean(getToken()));
   const [perfilError, setPerfilError] = useState(null);
 
-  // Hidratar la sesión al recargar: si hay token, pedimos el perfil real.
+  const [productosLoading, setProductosLoading] = useState(true);
+  const [productosError, setProductosError] = useState(null);
+
+  // El catalogo se hidrata desde el back. Los mocks quedan como valor inicial
+  // para que la tienda no este vacia mientras carga (y para los tests).
   useEffect(() => {
-    if (!getToken()) {
-      setAuthLoading(false);
-      return;
-    }
     let activo = true;
     (async () => {
+      try {
+        const datos = await obtenerProducto();
+        if (activo) setProductos(datos);
+      } catch (error) {
+        if (activo) setProductosError(error.message || "No se pudieron cargar los productos");
+      } finally {
+        if (activo) setProductosLoading(false);
+      }
+    })();
+    return () => {
+      activo = false;
+    };
+  }, []);
+
+  // Hidratar la sesión al recargar: si hay token, pedimos el perfil real.
+  useEffect(() => {
+    let activo = true;
+    (async () => {
+      if (!getToken()) {
+        if (activo) setAuthLoading(false);
+        return;
+      }
       try {
         const perfil = await obtenerPerfil();
         if (activo) setCurrentUser(normalizarPerfil(perfil));
@@ -235,6 +258,8 @@ export function AppProvider({ children }) {
     <Contexto.Provider
       value={{
         productos,
+        productosLoading,
+        productosError,
         clientes,
         categoriaSeleccionada,
         setCategoriaSeleccionada,

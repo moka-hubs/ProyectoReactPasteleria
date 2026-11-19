@@ -24,7 +24,13 @@ export default function Perfil() {
     variante: "success",
   });
 
-  useEffect(() => {
+  const [formUserId, setFormUserId] = useState(currentUser?.id);
+  const [ultimoPerfilError, setUltimoPerfilError] = useState(perfilError);
+
+  // Ajustar estado durante el render cuando cambia el usuario, en lugar de
+  // un efecto que llama a setState de forma sincronica (patron de React).
+  if (currentUser?.id !== formUserId) {
+    setFormUserId(currentUser?.id);
     if (currentUser) {
       setForm({
         nombreUsuario: currentUser.nombreUsuario || "",
@@ -32,17 +38,16 @@ export default function Perfil() {
         fechaNacUsuario: currentUser.fechaNacUsuario || "",
       });
     }
-  }, [currentUser]);
+  }
 
   useEffect(() => {
     if (!authLoading && !currentUser) setIsLoginOpen?.(true);
   }, [authLoading, currentUser, setIsLoginOpen]);
 
-  useEffect(() => {
-    if (perfilError) {
-      setAlerta({ mostrar: true, mensaje: perfilError, variante: "danger" });
-    }
-  }, [perfilError]);
+  if (perfilError && perfilError !== ultimoPerfilError) {
+    setUltimoPerfilError(perfilError);
+    setAlerta({ mostrar: true, mensaje: perfilError, variante: "danger" });
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
