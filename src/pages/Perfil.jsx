@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useApp } from "../context/useApp";
 import App_alert from "../components/alerts/alerts";
+import { useNavigate } from "react-router-dom";
 
 export default function Perfil() {
+  const navigate = useNavigate();
   const {
     currentUser,
     authLoading,
@@ -181,7 +183,9 @@ export default function Perfil() {
                       value={form.fechaNacUsuario}
                       onChange={handleChange}
                       required
+                      readOnly
                     />
+                    <div className="form-text">La fecha de nacimiento no se puede modificar.</div>
                   </div>
 
                   <div className="col-md-6">
@@ -204,19 +208,23 @@ export default function Perfil() {
                     {guardando ? "Guardando..." : "Guardar cambios"}
                   </button>
                   <button
-                    type="button"
-                    className="btn btn-outline-secondary"
+                    type="submit" className="btn-oferta"
                     onClick={cancelar}
                     disabled={guardando}
                   >
                     Cancelar
                   </button>
+
+                  <div className="d-flex justify-content-end w-100">
+                    <button
+                      className="py-3 fw-bold shadow-sm btn-oferta "
+                      onClick={() => navigate("/")}
+                    >
+                      Volver al inicio
+                    </button>
+                  </div>
                 </div>
               </form>
-            </div>
-
-            <div className="card-footer bg-white text-muted small">
-              ID de usuario: #{currentUser.id}
             </div>
           </div>
         </div>
