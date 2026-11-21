@@ -3,6 +3,7 @@ import { productosIniciales, clientesIniciales } from "../data/productos";
 import { Contexto } from "./useApp";
 import { login as loginApi, registro as registroApi } from "../api/authApi";
 import { obtenerProducto } from "../api/productosApi";
+import { obtenerCategorias } from "../api/categoriaApi";
 import {
   obtenerPerfil,
   actualizarPerfil as actualizarPerfilApi,
@@ -11,6 +12,19 @@ import { getToken, guardarToken, cerrarSesion } from "../auth/auth";
 
 const STORAGE_CARRITO = "carrito";
 const STORAGE_USUARIOS = "pasteleria_mil_sabores"; // solo para el recuperar legacy
+
+const CATEGORIAS_INICIALES = [
+  { id_categoria: 1, nombre_categoria: "Todos Los Productos" },
+  { id_categoria: 2, nombre_categoria: "Productos Sin Azúcar" },
+  { id_categoria: 3, nombre_categoria: "Tortas Cuadradas" },
+  { id_categoria: 4, nombre_categoria: "Tortas Circulares" },
+  { id_categoria: 5, nombre_categoria: "Postres Individuales" },
+  { id_categoria: 6, nombre_categoria: "Pastelería Tradicional" },
+  { id_categoria: 7, nombre_categoria: "Productos Sin Gluten" },
+  { id_categoria: 8, nombre_categoria: "Productos Veganos" },
+  { id_categoria: 9, nombre_categoria: "Tortas Especiales" },
+  { id_categoria: 10, nombre_categoria: "Más Vendidos" },
+];
 
 // El JWT trae el claim "rol" (JwtService: Map.of("rol", rol.name())).
 // Esto es SOLO para la UI; la autorización real la hace el back.
@@ -72,9 +86,24 @@ export function AppProvider({ children }) {
 
   const [productosLoading, setProductosLoading] = useState(true);
   const [productosError, setProductosError] = useState(null);
+  const [categorias, setCategorias] = useState(CATEGORIAS_INICIALES);
 
-  // El catalogo se hidrata desde el back. Los mocks quedan como valor inicial
-  // para que la tienda no este vacia mientras carga (y para los tests).
+  
+  useEffect(() => {
+    let activo = true;
+    (async () => {
+      try {
+        const datos = await obtenerCategorias();
+        if (activo && Array.isArray(datos) && datos.length) setCategorias(datos);
+      } catch {
+        // Se conserva el fallback si la API no responde.
+      }
+    })();
+    return () => {
+      activo = false;
+    };
+  }, []);
+
   useEffect(() => {
     let activo = true;
     (async () => {
@@ -92,7 +121,6 @@ export function AppProvider({ children }) {
     };
   }, []);
 
-  // Hidratar la sesión al recargar: si hay token, pedimos el perfil real.
   useEffect(() => {
     let activo = true;
     (async () => {
@@ -260,6 +288,7 @@ export function AppProvider({ children }) {
         productos,
         productosLoading,
         productosError,
+        categorias,
         clientes,
         categoriaSeleccionada,
         setCategoriaSeleccionada,

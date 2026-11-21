@@ -1,6 +1,12 @@
 import Productos from './CardProducto';
 import { useApp } from '../context/useApp';
 
+const normalizar = (texto) =>
+  String(texto || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
 export default function Catalogo() {
     const {
       agregarAlCarrito,
@@ -11,15 +17,15 @@ export default function Catalogo() {
     } = useApp();
 
     const categoriaActual = categoriaSeleccionada || 'Todos Los Productos';
+    const categoriaNormalizada = normalizar(categoriaActual);
 
     const todasLasCategorias =
-      categoriaActual === 'Todos Los Productos' ||
-      categoriaActual === 'Todos los productos' ||
-      categoriaActual === 'Nuestros Productos Destacados';
+      categoriaNormalizada === normalizar('Todos Los Productos') ||
+      categoriaNormalizada === normalizar('Nuestros Productos Destacados');
 
     const productosFiltrados = todasLasCategorias
       ? productos
-      : productos.filter(p => p.categoria.toLowerCase() === categoriaActual.toLowerCase());
+      : productos.filter(p => normalizar(p.categoria) === categoriaNormalizada);
 
     const tituloCatalogo = todasLasCategorias
       ? "Todos Nuestros Productos"

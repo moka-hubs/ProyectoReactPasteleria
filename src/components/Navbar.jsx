@@ -2,7 +2,7 @@ import { useApp } from "../context/useApp";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function NavBar() {
-const { setCategoriaSeleccionada, setisCarroOpen, setIsLoginOpen, totalUnidades, currentUser, logout } = useApp();  const navigate = useNavigate();
+const { setCategoriaSeleccionada, setisCarroOpen, setIsLoginOpen, totalUnidades, currentUser, logout, categorias } = useApp();  const navigate = useNavigate();
 
   const filtrar = (categoria) => {
     if (setCategoriaSeleccionada) {
@@ -60,16 +60,17 @@ const { setCategoriaSeleccionada, setisCarroOpen, setIsLoginOpen, totalUnidades,
                   Nuestros Productos
                 </a>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Todos Los Productos')}>Todos Los Productos</a></li>
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Productos Sin Azúcar')}>Productos Sin Azúcar</a></li>
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Tortas Cuadradas')}>Tortas Cuadradas</a></li>
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Tortas Circulares')}>Tortas Circulares</a></li>
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Postres Individuales')}>Postres Individuales</a></li>
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Pastelería Tradicional')}>Pasteleria Tradicional</a></li>
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Productos Sin Gluten')}>Productos Sin Gluten</a></li>
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Productos Veganos')}>Productos Veganos</a></li>
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Tortas Especiales')}>Tortas Especiales</a></li>
-                  <li><a className="dropdown-item" href="/#catalogo" onClick={() => filtrar('Más Vendidos')}>Productos Más Vendidos</a></li>
+                  {categorias.map((c) => (
+                    <li key={c.id_categoria}>
+                      <a
+                        className="dropdown-item"
+                        href="/#catalogo"
+                        onClick={() => filtrar(c.nombre_categoria)}
+                      >
+                        {c.nombre_categoria}
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </li>
             </ul>
