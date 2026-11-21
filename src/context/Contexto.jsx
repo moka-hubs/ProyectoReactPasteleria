@@ -70,6 +70,7 @@ export function AppProvider({ children }) {
       return [];
     }
   });
+  const [carritoError, setCarritoError] = useState(null);
 
   const [isCarroOpen, setisCarroOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -153,6 +154,15 @@ export function AppProvider({ children }) {
     const prod = productos.find((p) => p.codigo === codigo);
     if (!prod) return;
 
+    const stock = Number(prod.stock);
+    const yaEnCarrito = carrito.find((item) => item.codigo === codigo)?.cantidad || 0;
+
+    if (Number.isFinite(stock) && yaEnCarrito >= stock) {
+      setCarritoError(`No hay más stock disponible de ${prod.nombre}`);
+      return;
+    }
+
+    setCarritoError(null);
     setCarrito((prev) => {
       const existe = prev.find((item) => item.codigo === codigo);
       if (existe) {
@@ -173,16 +183,24 @@ export function AppProvider({ children }) {
   };
 
   const cambiarCantidad = (codigo, delta) => {
+    const item = carrito.find((i) => i.codigo === codigo);
+    const stock = Number(item?.stock);
+    if (item && delta > 0 && Number.isFinite(stock) && item.cantidad + delta > stock) {
+      setCarritoError(`No hay más stock disponible de ${item.nombre}`);
+      return;
+    }
+
+    setCarritoError(null);
     setCarrito((prev) =>
       prev
-        .map((item) => {
-          if (item.codigo === codigo) {
-            const nuevaCantidad = item.cantidad + delta;
+        .map((i) => {
+          if (i.codigo === codigo) {
+            const nuevaCantidad = i.cantidad + delta;
             return nuevaCantidad > 0
-              ? { ...item, cantidad: nuevaCantidad }
+              ? { ...i, cantidad: nuevaCantidad }
               : null;
           }
-          return item;
+          return i;
         })
         .filter(Boolean),
     );
@@ -293,6 +311,8 @@ export function AppProvider({ children }) {
         categoriaSeleccionada,
         setCategoriaSeleccionada,
         carrito,
+        carritoError,
+        setCarritoError,
         agregarAlCarrito,
         eliminarDelCarrito,
         cambiarCantidad,

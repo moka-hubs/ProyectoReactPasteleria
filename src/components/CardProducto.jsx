@@ -36,8 +36,9 @@ export default function Productos({ producto }) {
           <button
             className="btn btn-custom btn-agregar m-0 w-70"
             onClick={() => agregarAlCarrito(producto.codigo)}
+            disabled={Number(producto.stock) <= 0}
           >
-            Agregar al carro
+            {Number(producto.stock) <= 0 ? "Sin stock" : "Agregar al carro"}
           </button>
           <Link
             to={`/producto/${producto.codigo}`}

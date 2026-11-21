@@ -1,5 +1,6 @@
 import { useApp } from "../context/useApp";
 import { urlImagen } from "../utils/imagen";
+import { registrarCompra } from "../api/comprasApi";
 import { useState } from "react";
 import App_alert from "./alerts/alerts";
 
@@ -17,26 +18,55 @@ export const CarritoOffcanvas = () => {
     cambiarCantidad,
     eliminarDelCarrito,
     vaciarCarrito,
-    totalCarrito
+    totalCarrito,
+    carritoError,
+    setCarritoError,
+    currentUser,
+    setIsLoginOpen,
   } = useApp();
 
-  const handleFinalizarCompra = () => {
+  const [procesando, setProcesando] = useState(false);
+
+  const handleFinalizarCompra = async () => {
     if (carrito.length === 0) {
       setMensajeAlerta("Tu carrito esta vacío");
       setTipoAlerta("danger");
       setMostrarAlerta(true);
-      
       return;
     }
-    setMensajeAlerta("¡Muchas gracias por tu compra en Pastelería Mil Sabores! En breve nos pondremos en contacto.")
-    setTipoAlerta("success")
-    setMostrarAlerta(true);
-    setTimeout(() => {
+
+    if (!currentUser) {
+      setMensajeAlerta("Inicia sesión para finalizar tu compra");
+      setTipoAlerta("danger");
+      setMostrarAlerta(true);
+      setIsLoginOpen?.(true);
+      return;
+    }
+
+    setProcesando(true);
+    try {
+      const items = carrito.map(({ codigo, cantidad }) => ({ codigo, cantidad }));
+      const respuesta = await registrarCompra(items);
+
+      setCarritoError(null);
+      setMensajeAlerta(
+        `¡Compra realizada por $${respuesta.total.toLocaleString("es-CL")} CLP! Gracias por comprar en Pastelería Mil Sabores.`,
+      );
+      setTipoAlerta("success");
+      setMostrarAlerta(true);
       vaciarCarrito();
-      setisCarroOpen(false);
-      setMostrarAlerta(false);
-      setMensajeAlerta("");
-    }, 2000);
+      setTimeout(() => {
+        setisCarroOpen(false);
+        setMostrarAlerta(false);
+        setMensajeAlerta("");
+      }, 2500);
+    } catch (error) {
+      setMensajeAlerta(error.message || "No se pudo completar la compra");
+      setTipoAlerta("danger");
+      setMostrarAlerta(true);
+    } finally {
+      setProcesando(false);
+    }
   };
 
   return (
@@ -73,6 +103,9 @@ export const CarritoOffcanvas = () => {
 
         <div className="offcanvas-body d-flex flex-column justify-content-between p-3">
           <App_alert mostrarAlert={mostrarAlerta} cerrarAlert={() => setMostrarAlerta(false)} variant={tipoAlerta} msgAlert={mensajeAlerta}/>
+          {carritoError && (
+            <p className="text-danger small mb-2" role="alert">{carritoError}</p>
+          )}
           <div id="items-carrito" className="overflow-auto flex-grow-1 pe-1">
             {carrito.length === 0 ? (
               <div className="text-center my-5">
@@ -147,10 +180,10 @@ export const CarritoOffcanvas = () => {
             <button
               className="btn btn-success w-100 py-2 fw-semibold"
               onClick={handleFinalizarCompra}
-              disabled={carrito.length === 0}
+              disabled={carrito.length === 0 || procesando}
             >
               <i className="bi bi-credit-card me-1"></i>
-              Finalizar Compra
+              {procesando ? "Procesando..." : "Finalizar Compra"}
             </button>
           </div>
         </div>

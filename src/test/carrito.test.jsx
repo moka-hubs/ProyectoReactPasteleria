@@ -11,19 +11,24 @@ function CarritoDemo() {
     carrito,
     agregarAlCarrito,
     eliminarDelCarrito,
+    cambiarCantidad,
     vaciarCarrito,
     totalCarrito,
     totalUnidades,
+    carritoError,
   } = useApp();
 
   return (
     <div>
       <button onClick={() => agregarAlCarrito("TC001")}>Agregar Torta</button>
+      <button onClick={() => agregarAlCarrito("TE002")}>Agregar TE002</button>
+      <button onClick={() => cambiarCantidad("TE002", 1)}>Sumar TE002</button>
       <button onClick={() => eliminarDelCarrito("TC001")}>Eliminar producto</button>
       <button onClick={vaciarCarrito}>Vaciar</button>
       <p>Unidades: {totalUnidades}</p>
       <p>Total: {totalCarrito}</p>
       <p>Items: {carrito.map((i) => `${i.codigo}x${i.cantidad}`).join(", ") || "vacío"}</p>
+      <p>Error: {carritoError}</p>
     </div>
   );
 }
@@ -93,5 +98,25 @@ test("eliminar un producto lo quita del carrito", () => {
 
   expect(screen.getByText("Items: vacío")).toBeInTheDocument();
   expect(JSON.parse(localStorage.getItem("carrito"))).toEqual([]);
+});
+
+test("no permite superar el stock disponible (TE002 tiene stock 2)", () => {
+  render(
+    <AppProvider>
+      <CarritoDemo />
+    </AppProvider>,
+  );
+
+  fireEvent.click(screen.getByText("Agregar TE002"));
+  fireEvent.click(screen.getByText("Agregar TE002"));
+  fireEvent.click(screen.getByText("Agregar TE002"));
+
+  expect(screen.getByText("Items: TE002x2")).toBeInTheDocument();
+  expect(
+    screen.getByText("Error: No hay más stock disponible de Torta Especial de Boda"),
+  ).toBeInTheDocument();
+
+  fireEvent.click(screen.getByText("Sumar TE002"));
+  expect(screen.getByText("Items: TE002x2")).toBeInTheDocument();
 });
 
