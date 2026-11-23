@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { productosIniciales, clientesIniciales } from "../data/productos";
 import { Contexto } from "./useApp";
 import { login as loginApi, registro as registroApi } from "../api/authApi";
@@ -89,38 +89,45 @@ export function AppProvider({ children }) {
   const [productosError, setProductosError] = useState(null);
   const [categorias, setCategorias] = useState(CATEGORIAS_INICIALES);
 
-  
-  useEffect(() => {
-    let activo = true;
-    (async () => {
-      try {
-        const datos = await obtenerCategorias();
-        if (activo && Array.isArray(datos) && datos.length) setCategorias(datos);
-      } catch {
-        // Se conserva el fallback si la API no responde.
-      }
-    })();
-    return () => {
-      activo = false;
-    };
+  // Estas funciones también las usa el panel de administración para que el
+  // catálogo y el menú se actualicen en cuanto se guarda o elimina algo.
+  const recargarCategorias = useCallback(async () => {
+    try {
+      const datos = await obtenerCategorias();
+      if (Array.isArray(datos) && datos.length) setCategorias(datos);
+      return true;
+    } catch {
+      // Se conserva el fallback si la API no responde.
+      return false;
+    }
+  }, []);
+
+  const recargarProductos = useCallback(async () => {
+    setProductosLoading(true);
+    setProductosError(null);
+    try {
+      const datos = await obtenerProducto();
+      setProductos(Array.isArray(datos) ? datos : []);
+      return true;
+    } catch (error) {
+      setProductosError(error.message || "No se pudieron cargar los productos");
+      return false;
+    } finally {
+      setProductosLoading(false);
+    }
   }, []);
 
   useEffect(() => {
-    let activo = true;
     (async () => {
-      try {
-        const datos = await obtenerProducto();
-        if (activo) setProductos(datos);
-      } catch (error) {
-        if (activo) setProductosError(error.message || "No se pudieron cargar los productos");
-      } finally {
-        if (activo) setProductosLoading(false);
-      }
+      await recargarCategorias();
     })();
-    return () => {
-      activo = false;
-    };
-  }, []);
+  }, [recargarCategorias]);
+
+  useEffect(() => {
+    (async () => {
+      await recargarProductos();
+    })();
+  }, [recargarProductos]);
 
   useEffect(() => {
     let activo = true;
@@ -306,7 +313,9 @@ export function AppProvider({ children }) {
         productos,
         productosLoading,
         productosError,
+        recargarProductos,
         categorias,
+        recargarCategorias,
         clientes,
         categoriaSeleccionada,
         setCategoriaSeleccionada,
