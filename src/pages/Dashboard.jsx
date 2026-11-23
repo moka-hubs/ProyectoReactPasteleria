@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Administracion from "../components/Admin/Administracion";
 
 const kpis = [
   {
@@ -87,16 +88,11 @@ const colorEstado = {
   Pendiente: "bg-secondary",
 };
 
-export default function Dashboard() {
+function Resumen() {
   const maximo = Math.max(...ventasPorCategoria.map((c) => c.monto));
 
-  useEffect(() => {
-    window.scrollTo(0,0);
-  }, []);
-  
   return (
-    <main className="container my-5">
-      <h1 className="fs-2">Panel de Administración</h1>
+    <div>
       <p className="fs-6 mb-4">
         Vista de ejemplo del panel. Los datos son ilustrativos.
       </p>
@@ -220,6 +216,44 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+export default function Dashboard() {
+  const [vista, setVista] = useState("resumen");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <main className="container my-5">
+      <h1 className="fs-2">Panel de Administración</h1>
+      <ul className="nav nav-pills mb-4 gap-2">
+        <li className="nav-item">
+          <button
+            type="button"
+            className={`nav-link ${vista === "resumen" ? "active" : ""}`}
+            style={vista === "resumen" ? { backgroundColor: "#d25380" } : { color: "#5d4037" }}
+            onClick={() => setVista("resumen")}
+          >
+            <i className="bi bi-bar-chart me-1"></i>Resumen
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            type="button"
+            className={`nav-link ${vista === "administracion" ? "active" : ""}`}
+            style={vista === "administracion" ? { backgroundColor: "#d25380" } : { color: "#5d4037" }}
+            onClick={() => setVista("administracion")}
+          >
+            <i className="bi bi-sliders me-1"></i>Administración
+          </button>
+        </li>
+      </ul>
+
+      {vista === "resumen" ? <Resumen /> : <Administracion />}
     </main>
   );
 }
