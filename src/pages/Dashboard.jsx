@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Administracion from "../components/Admin/Administracion";
-import { cambiarEstadoPedido, obtenerDashboard } from "../api/dashboardApi";
+import { useApp } from "../context/useApp";
+import { cambiarEstadoPedido } from "../api/dashboardApi";
 import { formatoMoneda } from "../utils/formato";
 
 const ESTADOS = {
@@ -35,39 +36,16 @@ function TarjetaKpi({ titulo, valor, detalle, icono }) {
 }
 
 function Resumen() {
-  const [datos, setDatos] = useState(null);
-  const [error, setError] = useState(null);
-
-  const cargar = useCallback(async () => {
-    try {
-      const respuesta = await obtenerDashboard();
-      setDatos(respuesta);
-      setError(null);
-    } catch (e) {
-      setError(e.message || "No se pudo cargar el resumen");
-    }
-  }, []);
-
-  useEffect(() => {
-    let vivo = true;
-    obtenerDashboard()
-      .then((respuesta) => {
-        if (!vivo) return;
-        setDatos(respuesta);
-        setError(null);
-      })
-      .catch((e) => {
-        if (vivo) setError(e.message || "No se pudo cargar el resumen");
-      });
-    return () => { vivo = false; };
-  }, []);
+  const { dashboard: datos, dashboardLoading, dashboardError, recargarDashboard } = useApp();
+  const [errorCambio, setErrorCambio] = useState(null);
 
   const cambiarEstado = async (id, estado) => {
     try {
+      setErrorCambio(null);
       await cambiarEstadoPedido(id, estado);
-      await cargar();
+      await recargarDashboard();
     } catch (e) {
-      setError(e.message || "No se pudo cambiar el estado");
+      setErrorCambio(e.message || "No se pudo cambiar el estado");
     }
   };
 
@@ -108,7 +86,10 @@ function Resumen() {
 
   return (
       <div>
-        {error && <div className="alert alert-danger">{error}</div>}
+        {(dashboardError || errorCambio) && (
+            <div className="alert alert-danger">{dashboardError || errorCambio}</div>
+        )}
+        {dashboardLoading && !datos && <p className="text-muted small">Cargando resumen...</p>}
         {k && k.productosSinCosto > 0 && (
             <div className="alert alert-warning">
               Hay {k.productosSinCosto} producto(s) sin costo registrado: sus ventas no se

@@ -6,12 +6,23 @@ import { formatoMoneda } from "../utils/formato";
 const mocks = vi.hoisted(() => ({
     obtenerDashboard: vi.fn(),
     cambiarEstadoPedido: vi.fn(),
+    recargarDashboard: vi.fn(),
+    datos: null,
 }));
 
 vi.mock("../api/dashboardApi", () => ({
     obtenerDashboard: mocks.obtenerDashboard,
     cambiarEstadoPedido: mocks.cambiarEstadoPedido,
     obtenerCostos: vi.fn().mockResolvedValue({}),
+}));
+
+vi.mock("../context/useApp", () => ({
+    useApp: () => ({
+        dashboard: mocks.datos,
+        dashboardLoading: false,
+        dashboardError: null,
+        recargarDashboard: mocks.recargarDashboard,
+    }),
 }));
 
 const datos = {
@@ -46,7 +57,7 @@ beforeEach(() => {
 });
 
 test("muestra ventas totales, ganancia y margen con datos reales", async () => {
-    mocks.obtenerDashboard.mockResolvedValue(datos);
+    mocks.datos = datos;
     render(<Dashboard />);
 
     expect(await screen.findByText(formatoMoneda(120000))).toBeInTheDocument(); // ventas totales
@@ -56,7 +67,7 @@ test("muestra ventas totales, ganancia y margen con datos reales", async () => {
 });
 
 test("avisa cuando hay productos sin costo registrado", async () => {
-    mocks.obtenerDashboard.mockResolvedValue(datos);
+    mocks.datos = datos;
     render(<Dashboard />);
 
     expect(await screen.findByText(/4 producto\(s\) sin costo registrado/)).toBeInTheDocument();

@@ -4,7 +4,7 @@ import { Contexto } from "./useApp";
 import { login as loginApi, registro as registroApi } from "../api/authApi";
 import { obtenerProducto } from "../api/productosApi";
 import { obtenerCategorias } from "../api/categoriaApi";
-import { obtenerCostos } from "../api/dashboardApi";
+import { obtenerCostos, obtenerDashboard } from "../api/dashboardApi";
 import {
   obtenerPerfil,
   actualizarPerfil as actualizarPerfilApi,
@@ -90,6 +90,9 @@ export function AppProvider({ children }) {
   const [productosError, setProductosError] = useState(null);
   const [categorias, setCategorias] = useState(CATEGORIAS_INICIALES);
   const [costos, setCostos] = useState({});
+  const [dashboard, setDashboard] = useState(null);
+  const [dashboardLoading, setDashboardLoading] = useState(false);
+  const [dashboardError, setDashboardError] = useState(null);
 
   // Estas funciones también las usa el panel de administración para que el
   // catálogo y el menú se actualicen en cuanto se guarda o elimina algo.
@@ -133,6 +136,24 @@ export function AppProvider({ children }) {
     }
   }, []);
 
+  // El resumen tarda varios segundos (muchas consultas al back). Se carga junto
+  // con el catálogo al arrancar y al hacer login, para que ya esté listo al abrirlo.
+  const recargarDashboard = useCallback(async () => {
+    if (rolDelToken() !== "ADMIN") return false;
+    setDashboardLoading(true);
+    setDashboardError(null);
+    try {
+      const datos = await obtenerDashboard();
+      setDashboard(datos);
+      return true;
+    } catch (error) {
+      setDashboardError(error.message || "No se pudo cargar el resumen");
+      return false;
+    } finally {
+      setDashboardLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     (async () => {
       await recargarCategorias();
@@ -141,9 +162,9 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     (async () => {
-      await Promise.all([recargarProductos(), recargarCostos()]);
+      await Promise.all([recargarProductos(), recargarCostos(), recargarDashboard()]);
     })();
-  }, [recargarProductos, recargarCostos]);
+  }, [recargarProductos, recargarCostos, recargarDashboard]);
 
   useEffect(() => {
     let activo = true;
@@ -245,7 +266,11 @@ export function AppProvider({ children }) {
       guardarToken(respuesta.token);
 
       // En paralelo: el perfil y, si es admin, los costos del catálogo.
-      const [perfil] = await Promise.all([obtenerPerfil(), recargarCostos()]);
+      const [perfil] = await Promise.all([
+        obtenerPerfil(),
+        recargarCostos(),
+        recargarDashboard(),
+      ]);
       const usuario = normalizarPerfil(perfil);
       setCurrentUser(usuario);
 
@@ -323,6 +348,8 @@ export function AppProvider({ children }) {
     setCurrentUser(null);
     setPerfilError(null);
     setCostos({});
+    setDashboard(null);
+    setDashboardError(null);
   };
 
   return (
@@ -334,6 +361,10 @@ export function AppProvider({ children }) {
         recargarProductos,
         costos,
         recargarCostos,
+        dashboard,
+        dashboardLoading,
+        dashboardError,
+        recargarDashboard,
         categorias,
         recargarCategorias,
         clientes,
