@@ -40,7 +40,8 @@ function Resumen() {
 
   const cargar = useCallback(async () => {
     try {
-      setDatos(await obtenerDashboard());
+      const respuesta = await obtenerDashboard();
+      setDatos(respuesta);
       setError(null);
     } catch (e) {
       setError(e.message || "No se pudo cargar el resumen");
@@ -48,8 +49,18 @@ function Resumen() {
   }, []);
 
   useEffect(() => {
-    cargar();
-  }, [cargar]);
+    let vivo = true;
+    obtenerDashboard()
+      .then((respuesta) => {
+        if (!vivo) return;
+        setDatos(respuesta);
+        setError(null);
+      })
+      .catch((e) => {
+        if (vivo) setError(e.message || "No se pudo cargar el resumen");
+      });
+    return () => { vivo = false; };
+  }, []);
 
   const cambiarEstado = async (id, estado) => {
     try {
