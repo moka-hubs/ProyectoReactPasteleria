@@ -20,7 +20,7 @@ content-type: application/json
 
 {
     "correo": "admin@pasteleria.com",
-    "password": "Duoc.2026"
+    "password": "ClaveIncorrecta123"
 }
 
 
