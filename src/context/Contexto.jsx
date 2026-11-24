@@ -4,6 +4,7 @@ import { Contexto } from "./useApp";
 import { login as loginApi, registro as registroApi } from "../api/authApi";
 import { obtenerProducto } from "../api/productosApi";
 import { obtenerCategorias } from "../api/categoriaApi";
+import { obtenerCostos } from "../api/dashboardApi";
 import {
   obtenerPerfil,
   actualizarPerfil as actualizarPerfilApi,
@@ -88,6 +89,7 @@ export function AppProvider({ children }) {
   const [productosLoading, setProductosLoading] = useState(true);
   const [productosError, setProductosError] = useState(null);
   const [categorias, setCategorias] = useState(CATEGORIAS_INICIALES);
+  const [costos, setCostos] = useState({});
 
   // Estas funciones también las usa el panel de administración para que el
   // catálogo y el menú se actualicen en cuanto se guarda o elimina algo.
@@ -117,6 +119,20 @@ export function AppProvider({ children }) {
     }
   }, []);
 
+  // Los costos solo los entrega el backend a ADMIN (el catálogo público no los trae).
+  // Se cargan aquí, en paralelo con el catálogo, para que la pestaña de productos
+  // no tenga que esperar un fetch propio al abrirse.
+  const recargarCostos = useCallback(async () => {
+    if (rolDelToken() !== "ADMIN") return false;
+    try {
+      const datos = await obtenerCostos();
+      setCostos(datos || {});
+      return true;
+    } catch {
+      return false;
+    }
+  }, []);
+
   useEffect(() => {
     (async () => {
       await recargarCategorias();
@@ -125,9 +141,9 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     (async () => {
-      await recargarProductos();
+      await Promise.all([recargarProductos(), recargarCostos()]);
     })();
-  }, [recargarProductos]);
+  }, [recargarProductos, recargarCostos]);
 
   useEffect(() => {
     let activo = true;
@@ -228,7 +244,8 @@ export function AppProvider({ children }) {
       const respuesta = await loginApi(correo, password);
       guardarToken(respuesta.token);
 
-      const perfil = await obtenerPerfil();
+      // En paralelo: el perfil y, si es admin, los costos del catálogo.
+      const [perfil] = await Promise.all([obtenerPerfil(), recargarCostos()]);
       const usuario = normalizarPerfil(perfil);
       setCurrentUser(usuario);
 
@@ -305,6 +322,7 @@ export function AppProvider({ children }) {
     cerrarSesion();
     setCurrentUser(null);
     setPerfilError(null);
+    setCostos({});
   };
 
   return (
@@ -314,6 +332,8 @@ export function AppProvider({ children }) {
         productosLoading,
         productosError,
         recargarProductos,
+        costos,
+        recargarCostos,
         categorias,
         recargarCategorias,
         clientes,

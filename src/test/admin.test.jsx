@@ -4,6 +4,7 @@ import ProductosAdmin from "../components/Admin/ProductosAdmin";
 import CategoriasAdmin from "../components/Admin/CategoriasAdmin";
 import UsuariosAdmin from "../components/Admin/UsuariosAdmin";
 import Dashboard from "../pages/Dashboard";
+import { formatoMoneda } from "../utils/formato";
 
 const mocks = vi.hoisted(() => ({
   useApp: vi.fn(),
@@ -77,6 +78,23 @@ beforeEach(() => {
     recargarCategorias: mocks.recargarCategorias,
     currentUser: { id: 1, isAdmin: true },
   });
+});
+
+test("muestra el costo que ya viene en el contexto sin pedirlo al abrir", () => {
+  mocks.useApp.mockReturnValue({
+    productos: [producto],
+    productosLoading: false,
+    productosError: null,
+    recargarProductos: mocks.recargarProductos,
+    categorias,
+    recargarCategorias: mocks.recargarCategorias,
+    currentUser: { id: 1, isAdmin: true },
+    costos: { TC001: 20300 },
+  });
+
+  render(<ProductosAdmin />);
+
+  expect(screen.getByText(formatoMoneda(20300))).toBeInTheDocument();
 });
 
 test("crea un producto con el contrato del backend", async () => {

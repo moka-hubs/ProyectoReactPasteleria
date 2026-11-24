@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useApp } from "../../context/useApp";
 import {
   agregarProducto,
   actualizarProducto,
   eliminarProducto,
 } from "../../api/productosApi";
-import { obtenerCostos } from "../../api/dashboardApi";
 import AdminModal from "./AdminModal";
 import ConfirmarEliminacion from "./ConfirmarEliminacion";
 import App_alert from "../alerts/alerts";
@@ -29,19 +28,10 @@ export default function ProductosAdmin() {
     productosLoading,
     productosError,
     recargarProductos,
+    costos = {},
+    recargarCostos,
     categorias,
   } = useApp();
-
-  // Los costos solo los entrega el backend a administradores (el catálogo público no los trae).
-  const [costos, setCostos] = useState({});
-  const cargarCostos = () =>
-      obtenerCostos()
-          .then((datos) => setCostos(datos || {}))
-          .catch(() => {});
-
-  useEffect(() => {
-    cargarCostos();
-  }, []);
 
   const [filtro, setFiltro] = useState("");
   const [modalAbierto, setModalAbierto] = useState(false);
@@ -137,7 +127,7 @@ export default function ProductosAdmin() {
         await agregarProducto(datos);
       }
       await recargarProductos();
-      cargarCostos();
+      await recargarCostos?.();
       cerrarModal();
       mostrarAlerta(
           codigoOriginal ? "Producto actualizado correctamente." : "Producto creado correctamente.",
@@ -155,6 +145,7 @@ export default function ProductosAdmin() {
     try {
       await eliminarProducto(confirmar.codigo);
       await recargarProductos();
+      await recargarCostos?.();
       mostrarAlerta(`Se eliminó ${confirmar.nombre}.`);
     } catch (error) {
       mostrarAlerta(error.message || "No se pudo eliminar el producto.", "danger");
